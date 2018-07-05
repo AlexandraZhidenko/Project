@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A613F96920AD5F6A00BDF1AB /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A613F96820AD5F6A00BDF1AB /* TableViewController.m */; };
 		A613F96C20AD61A500BDF1AB /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A613F96B20AD61A500BDF1AB /* TableViewCell.m */; };
-		A6285E38208DC67800237497 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E37208DC67800237497 /* AppDelegate.m */; };
 		A6285E3B208DC67800237497 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E3A208DC67800237497 /* ViewController.m */; };
 		A6285E3E208DC67800237497 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6285E3C208DC67800237497 /* Main.storyboard */; };
 		A6285E41208DC67800237497 /* getxml_2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A6285E3F208DC67800237497 /* getxml_2.xcdatamodeld */; };
@@ -20,6 +19,7 @@
 		A6285E5A2090A64B00237497 /* NSData+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E582090A64B00237497 /* NSData+Encryption.m */; };
 		A6285E5D209B2AF500237497 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E5C209B2AF500237497 /* CollectionViewController.m */; };
 		A650DDD320A04B0D008F6208 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A650DDD220A04B0D008F6208 /* CollectionViewCell.m */; };
+		A692D7C820ECB54300426925 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7C720ECB54300426925 /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +28,6 @@
 		A613F96A20AD61A500BDF1AB /* TableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableViewCell.h; sourceTree = "<group>"; };
 		A613F96B20AD61A500BDF1AB /* TableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TableViewCell.m; sourceTree = "<group>"; };
 		A6285E33208DC67800237497 /* getxml_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = getxml_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6285E36208DC67800237497 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		A6285E37208DC67800237497 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		A6285E39208DC67800237497 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		A6285E3A208DC67800237497 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A6285E3D208DC67800237497 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -46,6 +44,8 @@
 		A6285E5C209B2AF500237497 /* CollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
 		A650DDD120A04B0D008F6208 /* CollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
 		A650DDD220A04B0D008F6208 /* CollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
+		A692D7C620ECB54300426925 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A692D7C720ECB54300426925 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +78,8 @@
 		A6285E35208DC67800237497 /* getxml_2 */ = {
 			isa = PBXGroup;
 			children = (
-				A6285E36208DC67800237497 /* AppDelegate.h */,
-				A6285E37208DC67800237497 /* AppDelegate.m */,
+				A692D7C620ECB54300426925 /* AppDelegate.h */,
+				A692D7C720ECB54300426925 /* AppDelegate.m */,
 				A6285E39208DC67800237497 /* ViewController.h */,
 				A6285E3A208DC67800237497 /* ViewController.m */,
 				A6285E4F208DCD2300237497 /* XMLReader.h */,
@@ -175,6 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A692D7C820ECB54300426925 /* AppDelegate.m in Sources */,
 				A6285E41208DC67800237497 /* getxml_2.xcdatamodeld in Sources */,
 				A6285E5D209B2AF500237497 /* CollectionViewController.m in Sources */,
 				A6285E5A2090A64B00237497 /* NSData+Encryption.m in Sources */,
@@ -184,7 +185,6 @@
 				A6285E51208DCD2300237497 /* XMLReader.m in Sources */,
 				A6285E49208DC67800237497 /* main.m in Sources */,
 				A650DDD320A04B0D008F6208 /* CollectionViewCell.m in Sources */,
-				A6285E38208DC67800237497 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
