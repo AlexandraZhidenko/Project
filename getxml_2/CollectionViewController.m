@@ -42,7 +42,7 @@ static NSString * const reuseIdentifier = @"cell";
                                                             NSString * text = [[NSString alloc] initWithData:decrypt encoding:NSUTF8StringEncoding];
                                                             NSError *error = nil;
                                                             self.parsedXml = [XMLReader dictionaryForXMLString:text error:&error];
-                                                            //NSLog(@"data = %@", self.parsedXml);
+                                                            NSLog(@"data = %@", self.parsedXml);
                                                             
                                                             self.arrItems = [NSMutableArray arrayWithCapacity:0];
                                                             self.arrItemsHasGroup = [NSMutableArray arrayWithCapacity:0];

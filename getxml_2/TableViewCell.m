@@ -35,24 +35,25 @@
         self.circle.path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 2.0*radius, 2.0*radius)cornerRadius:radius].CGPath;
         self.circle.position = CGPointMake(CGRectGetMidX(self.image.frame)-radius,
                                       CGRectGetMidY(self.image.frame)-radius);
-        // [UIColor colorWithRed:arc4random() % 255 / 255.0 green:arc4random() % 255 / 255.0 blue:arc4random() % 255 / 255.0 alpha:1].CGColor;
         self.circle.strokeColor = [UIColor blackColor].CGColor;
         self.circle.lineWidth = 0;
         [self.layer addSublayer:self.circle];
         
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake((self.image.frame.size.height + 5)/2, 0, self.image.frame.size.height, self.image.frame.size.height)];
         label.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
-        //NSString* newStr = [self.name.text substringWithRange:NSMakeRange(0, 1)];
         label.text = newStr;
         [self addSubview:label];
+    }
+    else
+    {
+        self.image.backgroundColor = [UIColor redColor];
+        //self.image = [[dictTableCell valueForKey:@"bigImg"] valueForKey:@"text"];
     }
 }
 
 -(void)setDict:(NSMutableDictionary *)dict
 {
     NSString* newStr = [self.name.text substringWithRange:NSMakeRange(0, 1)];
-    //NSLog(@"dict = %@", dict);
-    //NSLog(@"item = %@", [dict valueForKey:newStr]);
     self.circle.fillColor = CFBridgingRetain([dict objectForKey:newStr]);
 }
 

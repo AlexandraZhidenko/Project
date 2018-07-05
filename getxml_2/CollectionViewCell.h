@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UILabel * name;
 @property (nonatomic) NSDictionary* dictCell;
+@property (nonatomic) CAShapeLayer *circle;
 
 //-(void)setDescription:(NSDictionary*)dict;
 @end
