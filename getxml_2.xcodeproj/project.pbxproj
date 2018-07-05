@@ -15,11 +15,11 @@
 		A6285E43208DC67800237497 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A6285E42208DC67800237497 /* Assets.xcassets */; };
 		A6285E46208DC67800237497 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6285E44208DC67800237497 /* LaunchScreen.storyboard */; };
 		A6285E49208DC67800237497 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E48208DC67800237497 /* main.m */; };
-		A6285E51208DCD2300237497 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E50208DCD2300237497 /* XMLReader.m */; };
-		A6285E5A2090A64B00237497 /* NSData+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E582090A64B00237497 /* NSData+Encryption.m */; };
 		A6285E5D209B2AF500237497 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6285E5C209B2AF500237497 /* CollectionViewController.m */; };
 		A650DDD320A04B0D008F6208 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A650DDD220A04B0D008F6208 /* CollectionViewCell.m */; };
 		A692D7C820ECB54300426925 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7C720ECB54300426925 /* AppDelegate.m */; };
+		A692D7CB20EDEEB700426925 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7CA20EDEEB700426925 /* XMLReader.m */; };
+		A692D7CE20EDEED100426925 /* NSData+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7CD20EDEED100426925 /* NSData+Encryption.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,16 +36,16 @@
 		A6285E45208DC67800237497 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A6285E47208DC67800237497 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A6285E48208DC67800237497 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		A6285E4F208DCD2300237497 /* XMLReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMLReader.h; path = "../../../../Downloads/XMLReader-master/XMLReader.h"; sourceTree = "<group>"; };
-		A6285E50208DCD2300237497 /* XMLReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XMLReader.m; path = "../../../../Downloads/XMLReader-master/XMLReader.m"; sourceTree = "<group>"; };
-		A6285E582090A64B00237497 /* NSData+Encryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSData+Encryption.m"; path = "../../../Архив/NSData+Encryption.m"; sourceTree = "<group>"; };
-		A6285E592090A64B00237497 /* NSData+Encryption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+Encryption.h"; path = "../../../Архив/NSData+Encryption.h"; sourceTree = "<group>"; };
 		A6285E5B209B2AF500237497 /* CollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewController.h; sourceTree = "<group>"; };
 		A6285E5C209B2AF500237497 /* CollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
 		A650DDD120A04B0D008F6208 /* CollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
 		A650DDD220A04B0D008F6208 /* CollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 		A692D7C620ECB54300426925 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A692D7C720ECB54300426925 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		A692D7C920EDEEA300426925 /* XMLReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
+		A692D7CA20EDEEB700426925 /* XMLReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
+		A692D7CC20EDEED100426925 /* NSData+Encryption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+Encryption.h"; sourceTree = "<group>"; };
+		A692D7CD20EDEED100426925 /* NSData+Encryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encryption.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,6 @@
 				A692D7C720ECB54300426925 /* AppDelegate.m */,
 				A6285E39208DC67800237497 /* ViewController.h */,
 				A6285E3A208DC67800237497 /* ViewController.m */,
-				A6285E4F208DCD2300237497 /* XMLReader.h */,
 				A6285E5B209B2AF500237497 /* CollectionViewController.h */,
 				A6285E5C209B2AF500237497 /* CollectionViewController.m */,
 				A650DDD120A04B0D008F6208 /* CollectionViewCell.h */,
@@ -91,12 +90,13 @@
 				A613F96820AD5F6A00BDF1AB /* TableViewController.m */,
 				A613F96A20AD61A500BDF1AB /* TableViewCell.h */,
 				A613F96B20AD61A500BDF1AB /* TableViewCell.m */,
-				A6285E50208DCD2300237497 /* XMLReader.m */,
+				A692D7C920EDEEA300426925 /* XMLReader.h */,
+				A692D7CA20EDEEB700426925 /* XMLReader.m */,
+				A692D7CC20EDEED100426925 /* NSData+Encryption.h */,
+				A692D7CD20EDEED100426925 /* NSData+Encryption.m */,
 				A6285E3C208DC67800237497 /* Main.storyboard */,
 				A6285E42208DC67800237497 /* Assets.xcassets */,
 				A6285E44208DC67800237497 /* LaunchScreen.storyboard */,
-				A6285E592090A64B00237497 /* NSData+Encryption.h */,
-				A6285E582090A64B00237497 /* NSData+Encryption.m */,
 				A6285E47208DC67800237497 /* Info.plist */,
 				A6285E48208DC67800237497 /* main.m */,
 				A6285E3F208DC67800237497 /* getxml_2.xcdatamodeld */,
@@ -177,12 +177,12 @@
 			files = (
 				A692D7C820ECB54300426925 /* AppDelegate.m in Sources */,
 				A6285E41208DC67800237497 /* getxml_2.xcdatamodeld in Sources */,
+				A692D7CB20EDEEB700426925 /* XMLReader.m in Sources */,
 				A6285E5D209B2AF500237497 /* CollectionViewController.m in Sources */,
-				A6285E5A2090A64B00237497 /* NSData+Encryption.m in Sources */,
 				A613F96C20AD61A500BDF1AB /* TableViewCell.m in Sources */,
 				A6285E3B208DC67800237497 /* ViewController.m in Sources */,
 				A613F96920AD5F6A00BDF1AB /* TableViewController.m in Sources */,
-				A6285E51208DCD2300237497 /* XMLReader.m in Sources */,
+				A692D7CE20EDEED100426925 /* NSData+Encryption.m in Sources */,
 				A6285E49208DC67800237497 /* main.m in Sources */,
 				A650DDD320A04B0D008F6208 /* CollectionViewCell.m in Sources */,
 			);
