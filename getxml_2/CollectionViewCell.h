@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CollectionViewController.h"
 
 @interface CollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *image;
@@ -14,5 +15,4 @@
 @property (nonatomic) NSDictionary* dictCell;
 @property (nonatomic) CAShapeLayer *circle;
 
-//-(void)setDescription:(NSDictionary*)dict;
 @end

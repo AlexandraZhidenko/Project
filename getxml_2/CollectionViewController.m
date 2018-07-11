@@ -57,14 +57,12 @@ static NSString * const reuseIdentifier = @"cell";
                                                                 if([[[tmpDict valueForKey:@"hasGroup"] valueForKey:@"text"] isEqualToString:@"1"])
                                                                 {
                                                                     [self.arrItemsHasGroup addObject:tmpDict];
-                                                                    //NSLog(@"arr = %@", self.arrItemsHasGroup);
                                                                 }
                                                                 else
                                                                     [self.arrVendors addObject:tmpDict];
                                                             }
                                                             
                                                             [self.collectionView reloadData];
-                                                            //NSLog(@"count = %d", self.countGroups);
                                                         }
                                                     }];
     [dataTask resume];
@@ -111,11 +109,9 @@ static NSString * const reuseIdentifier = @"cell";
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     [self.arrVendorsAfterSearch removeAllObjects];
-//    [self.view addSubview:self.tableViewWithResults];
-     [self.tableViewWithResults removeFromSuperview];
+    [self.tableViewWithResults removeFromSuperview];
     if(searchText.length)
     {
-        //[self.collectionView setHidden:true];
         [self.tableViewWithResults setHidden:false];
         NSPredicate* pred = [NSPredicate predicateWithFormat:@"SELF CONTAINS[c] %@",searchText];
         
@@ -131,7 +127,8 @@ static NSString * const reuseIdentifier = @"cell";
             for(int j = 0; j < tmpArr.count; j++)
             {
                 if([[[[self.arrVendors objectAtIndex:i] valueForKey:@"title"] valueForKey:@"text"] isEqualToString:[tmpArr objectAtIndex:j]])
-                    [self.arrVendorsAfterSearch addObject:[self.arrVendors objectAtIndex:i]];            }
+                    [self.arrVendorsAfterSearch addObject:[self.arrVendors objectAtIndex:i]];
+            }
         }
         
         self.tableViewWithResults = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44)];

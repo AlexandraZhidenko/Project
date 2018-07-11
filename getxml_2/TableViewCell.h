@@ -15,6 +15,5 @@
 @property (nonatomic) CAShapeLayer *circle;
 
 @property (nonatomic) NSMutableDictionary* dict;
-//@property (nonatomic) NSMutableArray* colors;
 
 @end

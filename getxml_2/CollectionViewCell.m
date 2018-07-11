@@ -16,8 +16,12 @@
     
     if([[dictCell valueForKey:@"bigImg"] valueForKey:@"text"])
     {
-        self.image.backgroundColor = [UIColor redColor];
-        //self.image = [[dictCell valueForKey:@"bigImg"] valueForKey:@"text"];
+        NSString* str = @"https://inetbank.zapsibkombank.ru:9443/style/img/vendors/mobile/";
+        NSString* endStr = [[dictCell valueForKey:@"bigImg"] valueForKey:@"text"];
+        NSString* resultStr = [str stringByAppendingString:endStr];
+        
+        NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:resultStr]];
+        self.image.image = [UIImage imageWithData:imageData];
     }
     else
     {

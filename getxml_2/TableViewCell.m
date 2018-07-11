@@ -46,8 +46,12 @@
     }
     else
     {
-        self.image.backgroundColor = [UIColor redColor];
-        //self.image = [[dictTableCell valueForKey:@"bigImg"] valueForKey:@"text"];
+        NSString* str = @"https://inetbank.zapsibkombank.ru:9443/style/img/vendors/";
+        NSString* endStr = [[dictTableCell valueForKey:@"bigImg"] valueForKey:@"text"];
+        NSString* resultStr = [str stringByAppendingString:endStr];
+        
+        NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:resultStr]];
+        self.image.image = [UIImage imageWithData:imageData];
     }
 }
 
