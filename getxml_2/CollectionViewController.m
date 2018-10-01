@@ -19,12 +19,25 @@ static NSString * const reuseIdentifier = @"cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    self.navigationItem.titleView = self.searchBar;
-    self.searchBar.delegate = self;
-    
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    
+    /*self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    self.navigationItem.titleView = self.searchBar;
+    self.searchBar.delegate = self;*/
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchController];
+    
+    CGRect frame = self.navigationController.navigationBar.frame;
+    frame.origin.y = -10;
+    UIView *view = [[UIView alloc] initWithFrame:frame];
+    view = self.searchController.searchBar;
+    [self.collectionView addSubview:self.searchController.searchBar];
+    
+    self.searchController.delegate = self;
+    //self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    [self.searchController.searchBar sizeToFit];
     
     NSURL *url = [NSURL URLWithString:@"https://bb41.ru/pb/vdr.uu"];
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -106,46 +119,6 @@ static NSString * const reuseIdentifier = @"cell";
     }
 }
 
--(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-{
-    [self.arrVendorsAfterSearch removeAllObjects];
-    [self.tableViewWithResults removeFromSuperview];
-    if(searchText.length)
-    {
-        [self.tableViewWithResults setHidden:false];
-        NSPredicate* pred = [NSPredicate predicateWithFormat:@"SELF CONTAINS[c] %@",searchText];
-        
-        NSMutableArray* tmpArr = [NSMutableArray arrayWithCapacity:0];
-        for(int i = 0; i < self.arrVendors.count; i++)
-        {
-            [tmpArr addObject:[[[self.arrVendors objectAtIndex:i] valueForKey:@"title"] valueForKey:@"text"]];
-        }
-        tmpArr = (NSMutableArray*)[tmpArr filteredArrayUsingPredicate:pred];
-        
-        for(int i = 0; i < self.arrVendors.count; i++)
-        {
-            for(int j = 0; j < tmpArr.count; j++)
-            {
-                if([[[[self.arrVendors objectAtIndex:i] valueForKey:@"title"] valueForKey:@"text"] isEqualToString:[tmpArr objectAtIndex:j]])
-                    [self.arrVendorsAfterSearch addObject:[self.arrVendors objectAtIndex:i]];
-            }
-        }
-        
-        self.tableViewWithResults = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44)];
-        self.tableViewWithResults.delegate = self;
-        self.tableViewWithResults.dataSource = self;
-        [self.tableViewWithResults registerClass:[UITableViewCell self] forCellReuseIdentifier:@"cell"];
-       
-        [self.view addSubview:self.tableViewWithResults];
-        
-    }
-    else if(searchText.length == 0)
-    {
-        [self.tableViewWithResults setHidden:true];
-        [self.collectionView setHidden:false];
-    }
-}
-
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -169,16 +142,60 @@ static NSString * const reuseIdentifier = @"cell";
 {
     return 1;
 }
+
 - (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section
 {
     return self.arrVendorsAfterSearch.count;
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    NSDictionary* tmpDict = [self.arrVendorsAfterSearch objectAtIndex:indexPath.row];
-    cell.textLabel.text = [[tmpDict valueForKey:@"title"] valueForKey:@"text"];
+    TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"tableCell" forIndexPath:indexPath];
+    //NSDictionary* tmpDict = [self.arrVendorsAfterSearch objectAtIndex:indexPath.row];
+    cell.dictTableCell = [self.arrVendorsAfterSearch objectAtIndex:indexPath.row];
+    
     return cell;
+}
+
+#pragma mark - UISearchResultsUpdating
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchText = searchController.searchBar.text;
+    
+    [self.arrVendorsAfterSearch removeAllObjects];
+    [self.tableViewWithResults removeFromSuperview];
+    if(searchText.length)
+    {
+        [self.tableViewWithResults setHidden:false];
+        NSPredicate* pred = [NSPredicate predicateWithFormat:@"SELF CONTAINS[c] %@",searchText];
+        
+        NSMutableArray* tmpArr = [NSMutableArray arrayWithCapacity:0];
+        for(int i = 0; i < self.arrVendors.count; i++)
+        {
+            [tmpArr addObject:[[[self.arrVendors objectAtIndex:i] valueForKey:@"title"] valueForKey:@"text"]];
+        }
+        tmpArr = (NSMutableArray*)[tmpArr filteredArrayUsingPredicate:pred];
+        
+        for(int i = 0; i < self.arrVendors.count; i++)
+        {
+            for(int j = 0; j < tmpArr.count; j++)
+            {
+                if([[[[self.arrVendors objectAtIndex:i] valueForKey:@"title"] valueForKey:@"text"] isEqualToString:[tmpArr objectAtIndex:j]])
+                    [self.arrVendorsAfterSearch addObject:[self.arrVendors objectAtIndex:i]];
+            }
+        }
+        self.tableViewWithResults = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44)];
+        self.tableViewWithResults.delegate = self;
+        self.tableViewWithResults.dataSource = self;
+        [self.tableViewWithResults registerClass:[UITableViewCell self] forCellReuseIdentifier:@"tableCell"];
+        
+        [self.view addSubview:self.tableViewWithResults];
+    }
+    else if(searchText.length == 0)
+    {
+        [self.tableViewWithResults setHidden:true];
+        [self.collectionView setHidden:false];
+    }
 }
 
 #pragma mark <UICollectionViewDelegate>

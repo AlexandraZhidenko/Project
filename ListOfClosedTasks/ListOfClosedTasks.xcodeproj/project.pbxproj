@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A68AE98A213521D8008EC2D6 /* OutputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A68AE989213521D8008EC2D6 /* OutputTextView.m */; };
 		A692D7DD2101C4B700426925 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7DC2101C4B600426925 /* AppDelegate.m */; };
 		A692D7E02101C4B700426925 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7DF2101C4B700426925 /* ViewController.m */; };
 		A692D7E22101C4B700426925 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A692D7E12101C4B700426925 /* Assets.xcassets */; };
@@ -17,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A68AE988213521D8008EC2D6 /* OutputTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutputTextView.h; sourceTree = "<group>"; };
+		A68AE989213521D8008EC2D6 /* OutputTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OutputTextView.m; sourceTree = "<group>"; };
 		A692D7D82101C4B600426925 /* ListOfClosedTasks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ListOfClosedTasks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A692D7DB2101C4B600426925 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A692D7DC2101C4B600426925 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -69,6 +72,8 @@
 				A692D7DC2101C4B600426925 /* AppDelegate.m */,
 				A692D7DE2101C4B700426925 /* ViewController.h */,
 				A692D7DF2101C4B700426925 /* ViewController.m */,
+				A68AE988213521D8008EC2D6 /* OutputTextView.h */,
+				A68AE989213521D8008EC2D6 /* OutputTextView.m */,
 				A692D7F22101C8C300426925 /* NSData+Encryption.h */,
 				A692D7F32101C8C300426925 /* NSData+Encryption.m */,
 				A692D7F02101C6EA00426925 /* XMLReader.h */,
@@ -158,6 +163,7 @@
 				A692D7E82101C4B700426925 /* main.m in Sources */,
 				A692D7F42101C8C300426925 /* NSData+Encryption.m in Sources */,
 				A692D7F12101C6EA00426925 /* XMLReader.m in Sources */,
+				A68AE98A213521D8008EC2D6 /* OutputTextView.m in Sources */,
 				A692D7DD2101C4B700426925 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,7 +12,7 @@
 #import "CollectionViewCell.h"
 #import "TableViewController.h"
 
-@interface CollectionViewController : UICollectionViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface CollectionViewController : UICollectionViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UISearchControllerDelegate>
 @property (nonatomic) NSDictionary* parsedXml;
 
 @property (nonatomic) NSMutableArray* arrItems;
@@ -20,10 +20,10 @@
 @property (nonatomic) NSMutableArray* arrVendors;
 @property (nonatomic) NSMutableArray* arrVendorsAfterSearch;
 
+@property (nonatomic) UISearchController* searchController;
 @property (nonatomic) UISearchBar* searchBar;
 @property (nonatomic, strong) NSMutableArray *searchResults;
 
 @property (nonatomic) UITableView* tableViewWithResults;
-
 @property (nonatomic) UICollectionView* myCollectionView;
 @end
