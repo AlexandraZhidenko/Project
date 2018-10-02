@@ -15,6 +15,8 @@ NSString *kPrivateDragUTI = @"com.CCoding.DragNDrop";
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
+    self.backgroundColor = [NSColor whiteColor];
+    
     if (self.highlight) // highlight window
     {
         [[NSColor lightGrayColor] set];

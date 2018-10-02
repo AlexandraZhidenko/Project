@@ -126,9 +126,6 @@
 
 -(NSString*)modificationSummary:(NSString*)str // this function return correct summary without <>
 {
-    str = [str stringByReplacingOccurrencesOfString:@"<br/>" withString:@""];
-    str = [str stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
-    
     // from string to array
     NSMutableArray *arr = [[NSMutableArray alloc]init];
     for (int i=0; i < str.length; i++)
@@ -142,27 +139,30 @@
     
     for(int i = 0; i < lenghtDescrpt; i++)
     {
-        
-        if(i >= 2 && [arr[i - 2] isEqualToString:@")"])
+        if((i >= 3 && [arr[i - 2] isEqualToString:@")"] && [arr[i - 3] isEqualToString:@">"]) || (i >= 2 && [arr[i - 1] isEqualToString:@")"] && [arr[i - 2] isEqualToString:@">"]))
         {
             for(int j = i; j < lenghtDescrpt; j++)
             {
                 [summary appendString:arr[j]];
-                if([arr[j] isEqualToString:@"\n"])
+                if([arr[j] isEqualToString:@"\n"] || [arr[j] isEqualToString:@"<"])
                 {
                     summary = [summary stringByReplacingOccurrencesOfString:arr[j] withString:@""];
+                    str = [str stringByReplacingOccurrencesOfString:@"<br/>" withString:@""];
+                    str = [str stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
                     return summary;
                 }
             }
         }
     }
     
+    str = [str stringByReplacingOccurrencesOfString:@"<br/>" withString:@""];
+    str = [str stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
     return summary;
 }
 
 -(NSString*)setSummary:(NSDictionary*)dictionary // this function defining summary task
 {
-    //NSLog(@"dict = %@", dictionary);
+    NSLog(@"dict = %@", dictionary);
     NSString* strSummary;
     // check if there is a comment for technical writer
     NSArray* arrWithCustomFields = [[dictionary valueForKey:@"customfields"] valueForKey:@"customfield"];
@@ -189,9 +189,11 @@
         for(int i = 0; i < arrWithComments.count; i++)
         {
             NSString* strComment = [arrWithComments[i] valueForKey:@"text"];
-            if([strComment containsString:@"class=\"error\">&#91"])
+            if([strComment containsString:@"</span>(<a href="])
             {
+                NSLog(@"str - %@", strComment);
                 strSummary = [self modificationSummary:strComment];
+                NSLog(@"str - %@", strSummary);
                 return strSummary;
             }
         }
@@ -200,9 +202,11 @@
     else if([arrWithComments isKindOfClass:[NSDictionary class]])
     {
         NSString* strComment = [arrWithComments valueForKey:@"text"];
-        if([strComment containsString:@"class=\"error\">&#91;#&#93"])
+        if([strComment containsString:@"</span>(<a href="])
         {
+            NSLog(@"str - %@", strComment);
             strSummary = [self modificationSummary:strComment];
+            NSLog(@"str - %@", strSummary);
             return strSummary;
         }
     }
