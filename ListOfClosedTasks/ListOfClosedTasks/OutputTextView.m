@@ -15,7 +15,7 @@ NSString *kPrivateDragUTI = @"com.CCoding.DragNDrop";
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    if (self.highlight)
+    if (self.highlight) // highlight window
     {
         [[NSColor lightGrayColor] set];
         [NSBezierPath setDefaultLineWidth:5];
@@ -31,7 +31,6 @@ NSString *kPrivateDragUTI = @"com.CCoding.DragNDrop";
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender
 {
-    [[NSApp mainWindow] setLevel:kCGMainMenuWindowLevel];
     [[NSApp mainWindow] setCollectionBehavior:NSWindowCollectionBehaviorStationary|NSWindowCollectionBehaviorCanJoinAllSpaces|NSWindowCollectionBehaviorFullScreenAuxiliary];
     if ([sender draggingSourceOperationMask] & NSDragOperationCopy)
     {

@@ -52,7 +52,7 @@
     }];
 }
 
-- (BOOL)typeTask:(NSString*)typeStr
+- (BOOL)typeTask:(NSString*)typeStr // task type definition
 {
     if([typeStr isEqualToString:@"Bug"])
     {
@@ -70,10 +70,10 @@
         return true;
     }
     else
-        return false;
+        return false; // processing in function printfInf:(NSDictionary*)dict :(NSTextView*)textView
 }
 
--(void)printfInf:(NSDictionary*)dict :(NSTextView*)textView
+-(void)printfInf:(NSDictionary*)dict :(NSTextView*)textView // output information about task
 {
     textView.string = @"";
     self.arrayTasks = [[[dict valueForKey:@"rss"] valueForKey:@"channel"] valueForKey:@"item"];
@@ -115,6 +115,7 @@
             }
             
             [self.arrayClosedTasks addObject:self.list];
+            // output inf
             NSString* tmp = [[NSString alloc] initWithFormat:@"[%@](%@) %@\n\n", [self.list valueForKey:@"typeTask"], [self.list valueForKey:@"numberTask"], [self.list valueForKey:@"summary"]];
             NSDictionary* attributes = [NSDictionary dictionaryWithObject:textColor forKey:NSForegroundColorAttributeName];
             NSAttributedString* attr = [[NSAttributedString alloc] initWithString:tmp attributes:attributes];
@@ -123,11 +124,12 @@
     }
 }
 
--(NSString*)modificationSummary:(NSString*)str
+-(NSString*)modificationSummary:(NSString*)str // this function return correct summary without <>
 {
     str = [str stringByReplacingOccurrencesOfString:@"<br/>" withString:@""];
     str = [str stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
     
+    // from string to array
     NSMutableArray *arr = [[NSMutableArray alloc]init];
     for (int i=0; i < str.length; i++)
     {
@@ -158,10 +160,11 @@
     return summary;
 }
 
--(NSString*)setSummary:(NSDictionary*)dictionary
+-(NSString*)setSummary:(NSDictionary*)dictionary // this function defining summary task
 {
     //NSLog(@"dict = %@", dictionary);
     NSString* strSummary;
+    // check if there is a comment for technical writer
     NSArray* arrWithCustomFields = [[dictionary valueForKey:@"customfields"] valueForKey:@"customfield"];
     for(int i = 0; i < arrWithCustomFields.count; i++)
     {
@@ -174,12 +177,13 @@
     }
     
     NSArray* arrWithComments = [[dictionary valueForKey:@"comments"] valueForKey:@"comment"];
-    //NSLog(@"arr = %@", arrWithComments);
+    // if no comments
     if (arrWithComments.count == 0)
     {
         strSummary = [[dictionary valueForKey:@"summary"] valueForKey:@"text"];
         return strSummary;
     }
+    // if a few comments
     else if([arrWithComments isKindOfClass:[NSArray class]])
     {
         for(int i = 0; i < arrWithComments.count; i++)
@@ -192,6 +196,7 @@
             }
         }
     }
+    // if one comment
     else if([arrWithComments isKindOfClass:[NSDictionary class]])
     {
         NSString* strComment = [arrWithComments valueForKey:@"text"];
