@@ -17,9 +17,14 @@
 @property (nonatomic) NSOpenPanel* openPanel;
 
 @property (nonatomic) NSMutableDictionary* list;
-@property (nonatomic) NSMutableArray* arrayTasks;
+@property (nonatomic) NSArray* arrayTasks;
+
 @property (nonatomic) NSMutableArray* arrayClosedTasks;
+@property (nonatomic) NSMutableArray* arrayClosedTasks_Test;
+@property (nonatomic) NSMutableArray* arrayClosedTasks_Bank;
+
 @property (nonatomic) NSArray* fileTypes;
+@property (nonatomic) NSArray* arrWithCustomFields;
 
 @property (unsafe_unretained) IBOutlet NSTextView *outputTextView;
 - (IBAction)btnOpenFile:(id)sender;

@@ -69,6 +69,14 @@ NSString *kPrivateDragUTI = @"com.CCoding.DragNDrop";
     ViewController* vc = [[ViewController alloc] init];
     vc.outputTextView = [[OutputTextView alloc] init];
     
+    vc.arrayClosedTasks = [[NSMutableArray alloc] initWithCapacity:0];
+    vc.arrayClosedTasks_Bank = [NSMutableArray arrayWithCapacity:0];
+    vc.arrayClosedTasks_Test = [NSMutableArray arrayWithCapacity:0];
+    
+    vc.fileTypes = [NSArray arrayWithObjects:@"xml",nil];
+    
+    vc.outputTextView.delegate = self;
+    
     if ([sender draggingSource] != self)
     {
         NSURL *fileURL = [NSURL URLFromPasteboard:[sender draggingPasteboard]];

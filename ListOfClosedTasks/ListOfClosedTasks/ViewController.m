@@ -13,7 +13,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.arrayClosedTasks = [NSMutableArray arrayWithCapacity:0];
+    self.arrayClosedTasks = [[NSMutableArray alloc] initWithCapacity:0];
+    self.arrayClosedTasks_Bank = [NSMutableArray arrayWithCapacity:0];
+    self.arrayClosedTasks_Test = [NSMutableArray arrayWithCapacity:0];
     
     self.openPanel = [NSOpenPanel openPanel];
     self.openPanel.title = @"Choose a .xml file";
@@ -76,13 +78,14 @@
 -(void)printfInf:(NSDictionary*)dict :(NSTextView*)textView // output information about task
 {
     textView.string = @"";
+    NSColor* textColor;
+    
     self.arrayTasks = [[[dict valueForKey:@"rss"] valueForKey:@"channel"] valueForKey:@"item"];
-    //NSLog(@"%@", self.arrayTasks);
     for(int i = 0; i < self.arrayTasks.count; i++)
     {
         if([[[self.arrayTasks[i] valueForKey:@"status"] valueForKey:@"text"] isEqualToString:@"Closed"] || [[[self.arrayTasks[i] valueForKey:@"status"] valueForKey:@"text"] isEqualToString:@"Resolved"])//&& [[[self.arrayTasks[i] valueForKey:@"key"] valueForKey:@"text"] isEqualToString:@"TM-1234"]
         {
-            NSColor* textColor = [NSColor blackColor];
+            textColor = [NSColor blackColor];
             self.list = [NSMutableDictionary dictionaryWithCapacity:0];
             
             //set summary
@@ -113,14 +116,62 @@
                     }
                 }
             }
+            // set task color
+            [self.list setObject:textColor forKey:@"colorTask"];
             
-            [self.arrayClosedTasks addObject:self.list];
-            // output inf
-            NSString* tmp = [[NSString alloc] initWithFormat:@"[%@](%@) %@\n\n", [self.list valueForKey:@"typeTask"], [self.list valueForKey:@"numberTask"], [self.list valueForKey:@"summary"]];
-            NSDictionary* attributes = [NSDictionary dictionaryWithObject:textColor forKey:NSForegroundColorAttributeName];
-            NSAttributedString* attr = [[NSAttributedString alloc] initWithString:tmp attributes:attributes];
-            [[textView textStorage] appendAttributedString:attr];
+            // sorting by groups
+            for(int j = 0; j < self.arrWithCustomFields.count; j++)
+            {
+                if([[[self.arrWithCustomFields[j] valueForKey:@"customfieldname"] valueForKey:@"text"] containsString:@"Client"])
+                {
+                    if([[[[self.arrWithCustomFields[j] valueForKey:@"customfieldvalues"] valueForKey:@"customfieldvalue"] valueForKey:@"text"] isEqualToString:@"TEST"])
+                    {
+                        [self.arrayClosedTasks_Test addObject:self.list];
+                        break;
+                    }
+                    else
+                    {
+                        [self.list setObject:[[[self.arrWithCustomFields[j] valueForKey:@"customfieldvalues"] valueForKey:@"customfieldvalue"] valueForKey:@"text"] forKey:@"bankName"];
+                        [self.arrayClosedTasks_Bank addObject:self.list];
+                        break;
+                    }
+                }
+                else if(j == self.arrWithCustomFields.count -1)
+                    [self.arrayClosedTasks addObject:self.list];
+            }
         }
+    }
+    
+    // Output inf
+    NSDictionary* attributes = [NSDictionary dictionaryWithObject:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
+    NSAttributedString* attr = [[NSAttributedString alloc] initWithString:@"TEST\n" attributes:attributes];
+    [[textView textStorage] appendAttributedString:attr];
+    for(int i = 0; i < self.arrayClosedTasks_Test.count; i++)
+    {
+        NSString* tmp = [[NSString alloc] initWithFormat:@"[%@](%@) %@\n\n", [self.arrayClosedTasks_Test[i] valueForKey:@"typeTask"], [self.arrayClosedTasks_Test[i] valueForKey:@"numberTask"], [self.arrayClosedTasks_Test[i] valueForKey:@"summary"]];
+        NSDictionary* attributes = [NSDictionary dictionaryWithObject:[self.arrayClosedTasks_Test[i] valueForKey:@"colorTask"] forKey:NSForegroundColorAttributeName];
+        NSAttributedString* attr = [[NSAttributedString alloc] initWithString:tmp attributes:attributes];
+        [[textView textStorage] appendAttributedString:attr];
+    }
+    
+    attr = [[NSAttributedString alloc] initWithString:@"BANKS\n" attributes:attributes];
+    [[textView textStorage] appendAttributedString:attr];
+    for(int i = 0; i < self.arrayClosedTasks_Bank.count; i++)
+    {
+        NSString* tmp = [[NSString alloc] initWithFormat:@"%@ [%@](%@) %@\n\n", [self.arrayClosedTasks_Bank[i] valueForKey:@"bankName"], [self.arrayClosedTasks_Bank[i] valueForKey:@"typeTask"], [self.arrayClosedTasks_Bank[i] valueForKey:@"numberTask"], [self.arrayClosedTasks_Bank[i] valueForKey:@"summary"]];
+        NSDictionary* attributes = [NSDictionary dictionaryWithObject:[self.arrayClosedTasks_Bank[i] valueForKey:@"colorTask"] forKey:NSForegroundColorAttributeName];
+        NSAttributedString* attr = [[NSAttributedString alloc] initWithString:tmp attributes:attributes];
+        [[textView textStorage] appendAttributedString:attr];
+    }
+    
+    attr = [[NSAttributedString alloc] initWithString:@"OTHERS\n" attributes:attributes];
+    [[textView textStorage] appendAttributedString:attr];
+    for(int i = 0; i < self.arrayClosedTasks.count; i++)
+    {
+        NSString* tmp = [[NSString alloc] initWithFormat:@"[%@](%@) %@\n\n", [self.arrayClosedTasks[i] valueForKey:@"typeTask"], [self.arrayClosedTasks[i] valueForKey:@"numberTask"], [self.arrayClosedTasks[i] valueForKey:@"summary"]];
+        NSDictionary* attributes = [NSDictionary dictionaryWithObject:[self.arrayClosedTasks[i] valueForKey:@"colorTask"] forKey:NSForegroundColorAttributeName];
+        NSAttributedString* attr = [[NSAttributedString alloc] initWithString:tmp attributes:attributes];
+        [[textView textStorage] appendAttributedString:attr];
     }
 }
 
@@ -162,15 +213,14 @@
 
 -(NSString*)setSummary:(NSDictionary*)dictionary // this function defining summary task
 {
-    NSLog(@"dict = %@", dictionary);
     NSString* strSummary;
     // check if there is a comment for technical writer
-    NSArray* arrWithCustomFields = [[dictionary valueForKey:@"customfields"] valueForKey:@"customfield"];
-    for(int i = 0; i < arrWithCustomFields.count; i++)
+    self.arrWithCustomFields = [[dictionary valueForKey:@"customfields"] valueForKey:@"customfield"];
+    for(int i = 0; i < self.arrWithCustomFields.count; i++)
     {
-        if([[[[arrWithCustomFields[i] valueForKey:@"customfieldvalues"] valueForKey:@"customfieldvalue"] valueForKey:@"text"] containsString:@"href="])
+        if([[[[self.arrWithCustomFields[i] valueForKey:@"customfieldvalues"] valueForKey:@"customfieldvalue"] valueForKey:@"text"] containsString:@"href="])
         {
-            strSummary = [[[arrWithCustomFields[i] valueForKey:@"customfieldvalues"] valueForKey:@"customfieldvalue"] valueForKey:@"text"];
+            strSummary = [[[self.arrWithCustomFields[i] valueForKey:@"customfieldvalues"] valueForKey:@"customfieldvalue"] valueForKey:@"text"];
             strSummary = [self modificationSummary:strSummary];
             return strSummary;
         }
@@ -191,9 +241,7 @@
             NSString* strComment = [arrWithComments[i] valueForKey:@"text"];
             if([strComment containsString:@"</span>(<a href="])
             {
-                NSLog(@"str - %@", strComment);
                 strSummary = [self modificationSummary:strComment];
-                NSLog(@"str - %@", strSummary);
                 return strSummary;
             }
         }
@@ -204,9 +252,7 @@
         NSString* strComment = [arrWithComments valueForKey:@"text"];
         if([strComment containsString:@"</span>(<a href="])
         {
-            NSLog(@"str - %@", strComment);
             strSummary = [self modificationSummary:strComment];
-            NSLog(@"str - %@", strSummary);
             return strSummary;
         }
     }
