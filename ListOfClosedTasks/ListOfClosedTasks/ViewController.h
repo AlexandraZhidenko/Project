@@ -10,8 +10,10 @@
 #import "NSData+Encryption.h"
 #import "XMLReader.h"
 #import "OutputTextView.h"
+#import "JMMaskTextField.h"
+#import "ObjectClass.h"
 
-@interface ViewController : NSViewController <NSWindowDelegate, NSTextViewDelegate>
+@interface ViewController : NSViewController <NSWindowDelegate, NSTextViewDelegate, NSTextFieldDelegate, NSURLSessionDelegate, NSURLAuthenticationChallengeSender>
 
 @property (nonatomic) NSDictionary* parsedXml;
 @property (nonatomic) NSOpenPanel* openPanel;
@@ -24,15 +26,18 @@
 @property (nonatomic) NSMutableArray* arrayClosedTasks_Bank;
 
 @property (nonatomic) NSArray* fileTypes;
-@property (nonatomic) NSArray* arrWithCustomFields;
 
 @property (unsafe_unretained) IBOutlet NSTextView *outputTextView;
 - (IBAction)btnOpenFile:(id)sender;
 
-- (BOOL)typeTask:(NSString*)typeStr;
--(void)printfInf:(NSDictionary*)dict :(NSTextView*)textView;
--(NSString*)modificationSummary:(NSString*)str;
--(NSString*)setSummary:(NSDictionary*)dictionary;
+@property (weak,nonatomic) IBOutlet NSTextField * inputVersionTextField;
+//@property (weak) IBOutlet JMMaskTextField *testTextField;
+- (IBAction)btnGetXML:(id)sender;
 
+
+-(void)printfInf:(NSTextView*)textView;
+-(void)getInf:(Task*)task;
+-(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*) identity :(SecTrustRef*) trust;
+-(NSDictionary*)getXML:(NSString*)urlStr;
 @end
 

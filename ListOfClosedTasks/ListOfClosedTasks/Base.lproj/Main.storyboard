@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -746,17 +746,50 @@
                                     <action selector="btnOpenFile:" target="XfG-lQ-9wD" id="N1M-35-BaC"/>
                                 </connections>
                             </button>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B7R-bP-k51">
+                                <rect key="frame" x="125" y="179" width="96" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Kup-9Q-ED6"/>
+                                    <constraint firstAttribute="width" constant="96" id="Ovb-Bo-NzY"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="DqC-5d-abg">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="maskString" value="0.0.0.0"/>
+                                </userDefinedRuntimeAttributes>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cuf-28-bq4">
+                                <rect key="frame" x="223" y="172" width="93" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="03J-x2-YGV"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="Get XML" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pEq-hv-v2b">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnGetXML:" target="XfG-lQ-9wD" id="o40-Tz-TId"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="B7R-bP-k51" firstAttribute="leading" secondItem="Zko-re-3mP" secondAttribute="trailing" constant="36" id="0Vx-vn-5ta"/>
+                            <constraint firstItem="cuf-28-bq4" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="446-Hi-Ujw"/>
                             <constraint firstAttribute="bottom" secondItem="DYo-Sh-yLh" secondAttribute="bottom" id="JRX-hS-TOs"/>
                             <constraint firstItem="DYo-Sh-yLh" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="KM7-Kj-ccg"/>
+                            <constraint firstItem="B7R-bP-k51" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="MfA-yN-I0w"/>
                             <constraint firstAttribute="trailing" secondItem="DYo-Sh-yLh" secondAttribute="trailing" id="VBp-2t-v7i"/>
                             <constraint firstItem="Zko-re-3mP" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="atj-3K-avB"/>
+                            <constraint firstItem="cuf-28-bq4" firstAttribute="leading" secondItem="B7R-bP-k51" secondAttribute="trailing" constant="8" id="fli-Vk-Dlm"/>
                             <constraint firstItem="Zko-re-3mP" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="6" id="jYL-xv-FWb"/>
                             <constraint firstItem="DYo-Sh-yLh" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="sef-jL-fnA"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="inputVersionTextField" destination="B7R-bP-k51" id="wkm-kY-gr4"/>
                         <outlet property="outputTextView" destination="6NG-dm-R6S" id="9Dx-DR-MUI"/>
                     </connections>
                 </viewController>

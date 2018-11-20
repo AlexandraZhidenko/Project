@@ -86,7 +86,9 @@ NSString *kPrivateDragUTI = @"com.CCoding.DragNDrop";
         NSError *error = nil;
         self.xml = [XMLReader dictionaryForXMLString:str error:&error];
         
-        [vc printfInf:self.xml :self];
+        //[vc getInf:self.xml];
+        //[vc getInf:self.xml :0];
+        [vc printfInf:self];
     }
     return YES;
 }

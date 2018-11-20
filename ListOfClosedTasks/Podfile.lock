@@ -1,0 +1,12 @@
+PODS:
+  - VMaskTextField (1.0.8)
+
+DEPENDENCIES:
+  - VMaskTextField (~> 1.0)
+
+SPEC CHECKSUMS:
+  VMaskTextField: e77fe33633f999c5c38e70bed0afece0625624a4
+
+PODFILE CHECKSUM: 56335a62825233ff20dd4fa0c96fddcf2b364dec
+
+COCOAPODS: 1.4.0

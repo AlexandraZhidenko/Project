@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A683F604217EDBC3008EFF0D /* JMStringMask.m in Sources */ = {isa = PBXBuildFile; fileRef = A683F600217EDBC2008EFF0D /* JMStringMask.m */; };
+		A683F605217EDBC3008EFF0D /* JMMaskTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = A683F601217EDBC2008EFF0D /* JMMaskTextField.m */; };
+		A683F628219AA7F3008EFF0D /* ObjectClass.m in Sources */ = {isa = PBXBuildFile; fileRef = A683F627219AA7F2008EFF0D /* ObjectClass.m */; };
 		A68AE98A213521D8008EC2D6 /* OutputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A68AE989213521D8008EC2D6 /* OutputTextView.m */; };
 		A692D7DD2101C4B700426925 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7DC2101C4B600426925 /* AppDelegate.m */; };
 		A692D7E02101C4B700426925 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7DF2101C4B700426925 /* ViewController.m */; };
@@ -18,6 +21,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A683F5FF217449B9008EFF0D /* cert_azh.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cert_azh.p12; sourceTree = "<group>"; };
+		A683F600217EDBC2008EFF0D /* JMStringMask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMStringMask.m; sourceTree = "<group>"; };
+		A683F601217EDBC2008EFF0D /* JMMaskTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMMaskTextField.m; sourceTree = "<group>"; };
+		A683F602217EDBC2008EFF0D /* JMStringMask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMStringMask.h; sourceTree = "<group>"; };
+		A683F603217EDBC2008EFF0D /* JMMaskTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMMaskTextField.h; sourceTree = "<group>"; };
+		A683F626219AA7F2008EFF0D /* ObjectClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectClass.h; sourceTree = "<group>"; };
+		A683F627219AA7F2008EFF0D /* ObjectClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectClass.m; sourceTree = "<group>"; };
 		A68AE988213521D8008EC2D6 /* OutputTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutputTextView.h; sourceTree = "<group>"; };
 		A68AE989213521D8008EC2D6 /* OutputTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OutputTextView.m; sourceTree = "<group>"; };
 		A692D7D82101C4B600426925 /* ListOfClosedTasks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ListOfClosedTasks.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,12 +82,19 @@
 				A692D7DC2101C4B600426925 /* AppDelegate.m */,
 				A692D7DE2101C4B700426925 /* ViewController.h */,
 				A692D7DF2101C4B700426925 /* ViewController.m */,
+				A683F626219AA7F2008EFF0D /* ObjectClass.h */,
+				A683F627219AA7F2008EFF0D /* ObjectClass.m */,
 				A68AE988213521D8008EC2D6 /* OutputTextView.h */,
 				A68AE989213521D8008EC2D6 /* OutputTextView.m */,
 				A692D7F22101C8C300426925 /* NSData+Encryption.h */,
 				A692D7F32101C8C300426925 /* NSData+Encryption.m */,
 				A692D7F02101C6EA00426925 /* XMLReader.h */,
 				A692D7EF2101C6EA00426925 /* XMLReader.m */,
+				A683F603217EDBC2008EFF0D /* JMMaskTextField.h */,
+				A683F601217EDBC2008EFF0D /* JMMaskTextField.m */,
+				A683F602217EDBC2008EFF0D /* JMStringMask.h */,
+				A683F600217EDBC2008EFF0D /* JMStringMask.m */,
+				A683F5FF217449B9008EFF0D /* cert_azh.p12 */,
 				A692D7E12101C4B700426925 /* Assets.xcassets */,
 				A692D7F82101DEBF00426925 /* SearchRequest.xml */,
 				A692D7F92108471700426925 /* SearchRequest3.xml */,
@@ -159,9 +176,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A683F605217EDBC3008EFF0D /* JMMaskTextField.m in Sources */,
 				A692D7E02101C4B700426925 /* ViewController.m in Sources */,
 				A692D7E82101C4B700426925 /* main.m in Sources */,
 				A692D7F42101C8C300426925 /* NSData+Encryption.m in Sources */,
+				A683F628219AA7F3008EFF0D /* ObjectClass.m in Sources */,
+				A683F604217EDBC3008EFF0D /* JMStringMask.m in Sources */,
 				A692D7F12101C6EA00426925 /* XMLReader.m in Sources */,
 				A68AE98A213521D8008EC2D6 /* OutputTextView.m in Sources */,
 				A692D7DD2101C4B700426925 /* AppDelegate.m in Sources */,
@@ -289,7 +309,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ListOfClosedTasks/ListOfClosedTasks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ListOfClosedTasks/Info.plist;
@@ -303,7 +322,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ListOfClosedTasks/ListOfClosedTasks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ListOfClosedTasks/Info.plist;
