@@ -13,29 +13,39 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.openPanel = [NSOpenPanel openPanel];
-    self.openPanel.title = @"Choose a .xml file";
-    self.openPanel.showsResizeIndicator = YES;
-    self.openPanel.canCreateDirectories = YES;
-    self.openPanel.allowsMultipleSelection = NO;
-    
     self.fileTypes = [NSArray arrayWithObjects:@"xml",nil];
-    [self.openPanel setAllowedFileTypes:self.fileTypes];
     
     self.outputTextView.delegate = self;
     
+    NSMenuItem *itemCert = [[NSMenuItem alloc]initWithTitle:@"itemCert" action:nil keyEquivalent:@""];
+    NSMenu* cert = [[NSMenu alloc] initWithTitle:@"Cert"];
     
+    [[NSApp mainMenu] addItem:itemCert];
+    [[NSApp mainMenu] setSubmenu:cert forItem:itemCert];
+    
+    NSMenuItem* addCert = [[NSMenuItem alloc] initWithTitle:@"Add" action:@selector(addCert) keyEquivalent:@""];
+    [cert addItem:addCert];
+    
+    NSMenuItem* deleteCert = [[NSMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteCert) keyEquivalent:@""];
+    [cert addItem:deleteCert];
 }
 
 
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];
-
+    
     // Update the view, if already loaded.
 }
 
 - (IBAction)btnOpenFile:(id)sender
 {
+    self.openPanel = [NSOpenPanel openPanel];
+    self.openPanel.title = @"Choose a .xml file";
+    self.openPanel.showsResizeIndicator = YES;
+    self.openPanel.canCreateDirectories = YES;
+    self.openPanel.allowsMultipleSelection = NO;
+    [self.openPanel setAllowedFileTypes:self.fileTypes];
+    
     [self.openPanel beginSheetModalForWindow:self.openPanel.parentWindow completionHandler:^(NSInteger result){
         if (result == NSModalResponseOK)
         {
@@ -45,13 +55,24 @@
             NSString* str = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
             NSError *error = nil;
             self.parsedXml = [XMLReader dictionaryForXMLString:str error:&error];
-            //NSLog(@"parsed xml = %@", self.parsedXml);
-            //NSLog(@"selection - %@", selection);
-            //NSLog(@"path - %@", path);
             
-            //[self getInf:self.parsedXml];
-            //[self getInf:self.parsedXml :0];
-            //[self printfInf:self.outputTextView];
+            self.arrayClosedTasks = [[NSMutableArray alloc] initWithCapacity:0];
+            self.arrayClosedTasks_Bank = [NSMutableArray arrayWithCapacity:0];
+            self.arrayClosedTasks_Test = [NSMutableArray arrayWithCapacity:0];
+            
+            self.arrayTasks = [self getArrayDicts:self.parsedXml];
+            self.tasks = [NSMutableArray arrayWithCapacity:0];
+            for(int i = 0; i < self.arrayTasks.count; i++)
+            {
+                Task *task = [[Task alloc] initWithDictionary:self.arrayTasks[i]];
+                
+                task.block = ^{
+                    [self reloadView:self.outputTextView];
+                    
+                };
+                [self.tasks addObject:task];
+            }
+            [self reloadView:self.outputTextView];
         }
     }];
 }
@@ -63,6 +84,8 @@
     [tmp insertString:@"." atIndex:3];
     [tmp insertString:@"." atIndex:5];
     NSString *urlString = [NSString stringWithFormat:@"%@%@%@", @"https://jira.compassplus.ru/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=project+%3D+TM+AND+fixVersion+%3D+%22PB+", tmp, @"%22&tempMax=1000"];
+    
+    self.outputTextView.string = @"";
     
     NSURL* url = [NSURL URLWithString:urlString];
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -80,37 +103,50 @@
                                                             self.arrayClosedTasks_Bank = [NSMutableArray arrayWithCapacity:0];
                                                             self.arrayClosedTasks_Test = [NSMutableArray arrayWithCapacity:0];
                                                             
-                                                            ObjectClass* object = [[ObjectClass alloc] init];
-                                                            self.arrayTasks = [object getArrayDicts:self.parsedXml];
-                                                            
-                                                            Task* task = [[Task alloc] init];
+                                                            self.arrayTasks = [self getArrayDicts:self.parsedXml];
+                                                            self.tasks = [NSMutableArray arrayWithCapacity:0];
                                                             for(int i = 0; i < self.arrayTasks.count; i++)
                                                             {
-                                                                task = [task initWithDictionary:self.arrayTasks[i]];
-                                                                NSLog(@"number - %ld", task.numberTask);
-                                                                [self getInf:task];
-                                                            }
-                                                            
-                                                            task.block = ^{
-                                                                NSLog(@"task - %i", task.numberTask);
-                                                                [self getInf:task];
-                                                                //NSLog(@"arr - %@", self.arrayClosedTasks);
+                                                                Task *task = [[Task alloc] initWithDictionary:self.arrayTasks[i]];
                                                                 
-                                                                [self printfInf:self.outputTextView];
-                                                            };
-                                                            NSLog(@"---");
+                                                                task.block = ^{
+                                                                    [self reloadView:self.outputTextView];
+                                                                    
+                                                                };
+                                                                [self.tasks addObject:task];
+                                                            }
+                                                            [self reloadView:self.outputTextView];
                                                         }
-                 
+                                                        
                                                     }];
     [dataTask resume];
+}
+
+-(void)reloadView:(NSTextView*)textView
+{
+    for (Task *task in self.tasks)
+        [self getInf:task];
+    
+    [self printfInf:textView];
+}
+
+-(NSArray*)getArrayDicts:(NSDictionary*)dict
+{
+    NSArray* array = [[NSArray alloc] init];
+    array = [[[dict valueForKey:@"rss"] valueForKey:@"channel"] valueForKey:@"item"];
+    if([array isKindOfClass:[NSDictionary class]])
+    {
+        array = [NSArray arrayWithObject:array];
+    }
+    
+    return array;
 }
 
 -(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
     // Read .p12 file
-    NSString *path = @"/Users/a.zidenko/Desktop/ListOfClosedTasks/ListOfClosedTasks/cert_azh.p12";
-    NSData *dataP12 = [NSData dataWithContentsOfFile:path];
-    CFDataRef inP12data = (__bridge CFDataRef)dataP12;
+    
+    CFDataRef inP12data = (__bridge CFDataRef)@"";
     
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
@@ -129,7 +165,9 @@
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*)identity :(SecTrustRef*)trust
 {
     // Import .p12 data
-    CFStringRef password = CFSTR("qwerty");
+    
+    //CFStringRef password = CFSTR("qwerty");
+    CFStringRef password = (__bridge CFStringRef)(self.password);
     const void *keys[] = { kSecImportExportPassphrase };
     const void *values[] = { password };
     CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL); // options = {passphrase = password;}
@@ -154,18 +192,19 @@
 
 -(void)getInf:(Task*)task
 {
+    
     if([task.status isEqualToString:@"Closed"] || [task.status isEqualToString:@"Resolved"])//&& [[[self.arrayTasks[index] valueForKey:@"key"] valueForKey:@"text"] isEqualToString:@"TM-1234"]
     {
         NSColor* textColor;
         textColor = [NSColor blackColor];
         self.list = [NSMutableDictionary dictionaryWithCapacity:0];
-            
+        
         //set summary
         [self.list setObject:task.summary forKey:@"summary"];
-            
+        
         //set number task
         [self.list setObject:[NSNumber numberWithInteger:task.numberTask] forKey:@"numberTask"];
-            
+        
         //set type task
         if(![task.type isEqualToString:@"SubTask"])
         {
@@ -176,11 +215,11 @@
         }
         else
         {
-            NSInteger* parentNumber = task.parentNumber;
+            NSInteger parentNumber = task.parentNumber;
             for(int j = 0; j < self.arrayTasks.count; j++)
             {
-                NSInteger* number = task.numberTask;
-                    
+                NSInteger number = task.numberTask;
+                
                 if(number == parentNumber)
                 {
                     Task* parentTask = [[Task alloc] initWithDictionary:self.arrayTasks[j]];
@@ -202,69 +241,69 @@
                 // set task color
                 [self.list setObject:textColor forKey:@"colorTask"];
             }
-            else 
+            else
             {
                 [self.list setObject:@"No type" forKey:@"typeTask"];
                 textColor = [NSColor redColor];
             }
-                
+            
         }
         
         // sorting by groups
         BOOL add = false;
         if(task.client == true)
-         {
-             if([task.typeClients isEqualToString:@"TEST"])
-             {
-                 for (int i = 0; i < self.arrayClosedTasks_Test.count; i++)
-                 {
-                     if ([[self.arrayClosedTasks_Test[i] objectForKey:@"numberTask"] integerValue] == task.numberTask)
-                     {
-                         [self.arrayClosedTasks_Test[i] setObject:task.type forKey:@"typeTask"];
-                         add = true;
-                         break;
-                     }
-                 }
-                 if (add == false)
-                 {
-                     [self.arrayClosedTasks_Test addObject:self.list];
-                 }
-             }
-             else
-             {
-                 [self.list setObject:task.typeClients forKey:@"bankName"];
-                 
-                 for (int i = 0; i < self.arrayClosedTasks_Bank.count; i++)
-                 {
-                     if ([[self.arrayClosedTasks_Bank[i] objectForKey:@"numberTask"] integerValue] == task.numberTask)
-                     {
-                         [self.arrayClosedTasks_Bank[i] setObject:task.type forKey:@"typeTask"];
-                         add = true;
-                         break;
-                     }
-                 }
-                 if (add == false)
-                 {
-                     [self.arrayClosedTasks_Bank addObject:self.list];
-                 }
-             }
-         }
-         else if(task.client == false)
-         {
-             for (int i = 0; i < self.arrayClosedTasks.count; i++)
-             {
-                 if ([[self.arrayClosedTasks[i] objectForKey:@"numberTask"] integerValue] == task.numberTask)
-                 {
-                     [self.arrayClosedTasks[i] setObject:task.type forKey:@"typeTask"];
-                     add = true;
-                     break;
-                 }
-             }
-             if (add == false)
-             {
-                 [self.arrayClosedTasks addObject:self.list];
-             }
-         }
+        {
+            if([task.typeClients isEqualToString:@"TEST"])
+            {
+                for (int i = 0; i < self.arrayClosedTasks_Test.count; i++)
+                {
+                    if ([[self.arrayClosedTasks_Test[i] objectForKey:@"numberTask"] integerValue] == task.numberTask)
+                    {
+                        [self.arrayClosedTasks_Test[i] setObject:task.type forKey:@"typeTask"];
+                        add = true;
+                        break;
+                    }
+                }
+                if (add == false)
+                {
+                    [self.arrayClosedTasks_Test addObject:self.list];
+                }
+            }
+            else
+            {
+                [self.list setObject:task.typeClients forKey:@"bankName"];
+                
+                for (int i = 0; i < self.arrayClosedTasks_Bank.count; i++)
+                {
+                    if ([[self.arrayClosedTasks_Bank[i] objectForKey:@"numberTask"] integerValue] == task.numberTask)
+                    {
+                        [self.arrayClosedTasks_Bank[i] setObject:task.type forKey:@"typeTask"];
+                        add = true;
+                        break;
+                    }
+                }
+                if (add == false)
+                {
+                    [self.arrayClosedTasks_Bank addObject:self.list];
+                }
+            }
+        }
+        else if(task.client == false)
+        {
+            for (int i = 0; i < self.arrayClosedTasks.count; i++)
+            {
+                if ([[self.arrayClosedTasks[i] objectForKey:@"numberTask"] integerValue] == task.numberTask)
+                {
+                    [self.arrayClosedTasks[i] setObject:task.type forKey:@"typeTask"];
+                    add = true;
+                    break;
+                }
+            }
+            if (add == false)
+            {
+                [self.arrayClosedTasks addObject:self.list];
+            }
+        }
     }
 }
 
@@ -309,4 +348,91 @@
     }
 }
 
+-(void)addCert
+{
+    NSOpenPanel* openPanel = [NSOpenPanel openPanel];
+    openPanel.title = @"Choose a cert";
+    openPanel.showsResizeIndicator = YES;
+    openPanel.canCreateDirectories = YES;
+    openPanel.allowsMultipleSelection = NO;
+    
+    NSArray* type = [NSArray arrayWithObjects:@"p12",nil];
+    [openPanel setAllowedFileTypes:type];
+    
+    [openPanel beginSheetModalForWindow:openPanel.parentWindow completionHandler:^(NSInteger result){
+        if (result == NSModalResponseOK)
+        {
+            NSAlert *alert = [NSAlert alertWithMessageText: @"Input password"
+                                             defaultButton:@"OK"
+                                           alternateButton:@"Cancel"
+                                               otherButton:nil
+                                 informativeTextWithFormat:@""];
+            
+            NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+            //[input autorelease];
+            [alert setAccessoryView:input];
+            NSInteger button = [alert runModal];
+            if (button == NSAlertDefaultReturn)
+            {
+                [input validateEditing];
+                self.password = [input stringValue];
+            }
+            else if (button == NSAlertAlternateReturn)
+            {
+                self.password = @"";
+            }
+            
+            NSURL *selection = openPanel.URLs[0];
+            NSString* filePath = [[NSString alloc] initWithString:[[selection path] stringByResolvingSymlinksInPath]];
+            //NSString* path = [filePath stringByDeletingLastPathComponent];
+            //NSLog(@"cert - %@", path);
+            //NSData* data = [NSData dataWithContentsOfFile:path];
+            
+            // Create dictionary of search parameters
+            NSString *service = [[NSBundle mainBundle] bundleIdentifier];
+            NSDictionary* dict= [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, nil];
+            // Remove any old values from the keychain
+            OSStatus err = SecItemDelete((__bridge CFDictionaryRef) dict);
+            
+            // Create dictionary of parameters to add
+            dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword), kSecClass, service, kSecAttrService, self.password, kSecValueData, filePath, kSecAttrPath, nil];
+            NSLog(@"dict - %@", dict);
+            // Try to save to keychain
+            err = SecItemAdd((__bridge CFDictionaryRef) dict, NULL);
+            
+            // Create dictionary of search parameters
+            NSDictionary* dict2 = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, kCFBooleanTrue, kSecReturnData, kCFBooleanTrue, kSecAttrPath, nil];
+//            NSDictionary* dict2 = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, kCFBooleanTrue, kSecReturnData, , kSecAttrPath, nil];
+            NSLog(@"dict2 - %@", dict2);
+            
+            // Look up server in the keychain
+            NSDictionary* found = nil;
+            CFDictionaryRef foundCF;
+            err = SecItemCopyMatching((__bridge CFDictionaryRef) dict2, (CFTypeRef*)&foundCF);
+            
+            //NSLog(@"%d",(int)err);
+            found = (__bridge NSDictionary*)(foundCF);
+            if (!found) return;
+            
+            // Found
+            NSString* password = [[NSString alloc] initWithData:[found objectForKey:(__bridge id)(kSecValueData)] encoding:NSUTF8StringEncoding];
+            NSString* path = [found objectForKey:(__bridge id)(kSecAttrPath)];
+            
+            NSLog(@"pass %@ and path %@", password, path);
+        }
+    }];
+}
+
+-(void)deleteCert
+{
+    // Create dictionary of search parameters
+    NSString *service = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, kCFBooleanTrue, kSecReturnData, nil];
+    
+    // Remove any old values from the keychain
+    OSStatus err = SecItemDelete((__bridge CFDictionaryRef) dict);
+    //NSLog(@"%d",(int)err);
+}
+
 @end
+

@@ -1,4 +1,4 @@
-// 
+//
 //  ObjectClass.h
 //  ListOfClosedTasks
 //
@@ -19,16 +19,16 @@
 
 @end
 
-typedef void (^callback)();
+typedef void (^callback)(void);
 
 @interface Task: NSObject
 
-@property (nonatomic) NSMutableString* type;
-@property (nonatomic) NSInteger* numberTask;
+@property (nonatomic) NSString* type;
+@property (nonatomic) NSInteger numberTask;
 @property (nonatomic) NSString* summary;
 @property (nonatomic) NSString* status;
 
-@property (nonatomic) NSInteger* parentNumber;
+@property (nonatomic) NSInteger parentNumber;
 @property (nonatomic) NSString* typeClients;
 @property (nonatomic) BOOL client;
 @property (nonatomic, strong) callback block;

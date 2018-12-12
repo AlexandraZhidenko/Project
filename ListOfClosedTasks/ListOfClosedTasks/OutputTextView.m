@@ -86,9 +86,22 @@ NSString *kPrivateDragUTI = @"com.CCoding.DragNDrop";
         NSError *error = nil;
         self.xml = [XMLReader dictionaryForXMLString:str error:&error];
         
-        //[vc getInf:self.xml];
-        //[vc getInf:self.xml :0];
-        [vc printfInf:self];
+        vc.arrayClosedTasks = [[NSMutableArray alloc] initWithCapacity:0];
+        vc.arrayClosedTasks_Bank = [NSMutableArray arrayWithCapacity:0];
+        vc.arrayClosedTasks_Test = [NSMutableArray arrayWithCapacity:0];
+        
+        vc.arrayTasks = [vc getArrayDicts:self.xml];
+        vc.tasks = [NSMutableArray arrayWithCapacity:0];
+        for(int i = 0; i < vc.arrayTasks.count; i++)
+        {
+            Task *task = [[Task alloc] initWithDictionary:vc.arrayTasks[i]];
+            
+            task.block = ^{
+                [vc reloadView:self];
+            };
+            [vc.tasks addObject:task];
+        }
+        [vc reloadView:self];
     }
     return YES;
 }

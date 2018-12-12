@@ -10,18 +10,6 @@
 
 @implementation ObjectClass
 
--(NSArray*)getArrayDicts:(NSDictionary*)dict
-{
-    NSArray* array = [[NSArray alloc] init];
-    array = [[[dict valueForKey:@"rss"] valueForKey:@"channel"] valueForKey:@"item"];
-    if([array isKindOfClass:[NSDictionary class]])
-    {
-        array = [NSArray arrayWithObject:array];
-    }
-    
-    return array;
-}
-
 -(NSString*)setSummary:(NSDictionary*)dictionary // this function defining summary task
 {
     NSString* strSummary;
@@ -95,11 +83,11 @@
                 [summary appendString:arr[j]];
                 if([arr[j] isEqualToString:@"\n"] || [arr[j] isEqualToString:@"<"])
                 {
-                    summary = [summary stringByReplacingOccurrencesOfString:arr[j] withString:@""];
+                    summary = [NSMutableString stringWithString:[summary stringByReplacingOccurrencesOfString:arr[j] withString:@""]];
                     str = [str stringByReplacingOccurrencesOfString:@"<br/>" withString:@""];
                     str = [str stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
-                    summary = [summary stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
-                    summary = [summary stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+                    summary = [NSMutableString stringWithString:[summary stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"]];
+                    summary = [NSMutableString stringWithString:[summary stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"]];
                     return summary;
                 }
             }
@@ -125,12 +113,12 @@
     //set number task
     NSString* tmp = [[dictionary valueForKey:@"key"] valueForKey:@"text"];
     tmp = [tmp stringByReplacingOccurrencesOfString:@"TM-" withString:@""];
-    self.numberTask = (long*)[tmp integerValue];
+    self.numberTask = [tmp integerValue];
     
     //set parent number
     tmp = [[dictionary valueForKey:@"parent"] valueForKey:@"text"];
     tmp = [tmp stringByReplacingOccurrencesOfString:@"TM-" withString:@""];
-    self.parentNumber = (long*)[tmp integerValue];
+    self.parentNumber = [tmp integerValue];
     
     //set type task
     NSString* typeStr = [[dictionary valueForKey:@"type"] valueForKey:@"text"];
@@ -148,7 +136,9 @@
     }
     else
     {
+        // NSLog(@"self number = %li",(long)self.numberTask);
         [self getParentTask];
+        self.type = @"";
     }
     
     //set summary
@@ -183,41 +173,32 @@
 
 -(void)getParentTask
 {
-    NSLog(@"prev task - %i",self.numberTask);
-    NSString *urlString = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://jira.compassplus.ru/si/jira.issueviews:issue-xml/TM-", [NSString stringWithFormat: @"%i", self.parentNumber], @"/TM-", [NSString stringWithFormat: @"%i", self.parentNumber], @".xml"];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        dispatch_group_t group = dispatch_group_create();
-        dispatch_group_enter(group);
-        
-        NSURL* url = [NSURL URLWithString:urlString];
-        NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultConfigObject delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-        NSURLSessionDataTask * dataTask = [defaultSession dataTaskWithURL:url
-                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-                                                            if(error == nil)
+    //NSLog(@"prev task - %li",(long)self.numberTask);
+    NSString *urlString = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://jira.compassplus.ru/si/jira.issueviews:issue-xml/TM-", [NSString stringWithFormat: @"%li", (long)self.parentNumber], @"/TM-", [NSString stringWithFormat: @"%li", (long)self.parentNumber], @".xml"];
+    NSURL* url = [NSURL URLWithString:urlString];
+    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultConfigObject delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+    NSURLSessionDataTask * dataTask = [defaultSession dataTaskWithURL:url
+                                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                                                        if(error == nil)
+                                                        {
+                                                            NSString * text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                                                            NSDictionary* parentsDict = [XMLReader dictionaryForXMLString:text error:&error];
+                                                            if (parentsDict)
                                                             {
-                                                                NSString * text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                                                                NSDictionary* parentsDict = [XMLReader dictionaryForXMLString:text error:&error];
                                                                 parentsDict = [[[parentsDict objectForKey:@"rss"] objectForKey:@"channel"] objectForKey:@"item"];
                                                                 Task* parentTaskFromOtherVersion = [[Task alloc] initWithDictionary:parentsDict];
                                                                 self.type = parentTaskFromOtherVersion.type;
-                                                                dispatch_group_leave(group);
+                                                                if (_block)
+                                                                {
+                                                                    //NSLog(@"%ld task type - %@", self.numberTask,self.type);
+                                                                    _block();
+                                                                }
                                                             }
-                                                        }];
-        [dataTask resume];
-        
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (_block)
-            {
-                NSLog(@"%ld task type - ", self.numberTask);
-                _block();
-            }
-        });
-
-    });
-    
+                                                            
+                                                        }
+                                                    }];
+    [dataTask resume];
     
 }
 
@@ -269,3 +250,4 @@
 }
 
 @end
+

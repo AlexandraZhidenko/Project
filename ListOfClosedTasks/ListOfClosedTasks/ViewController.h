@@ -10,7 +10,6 @@
 #import "NSData+Encryption.h"
 #import "XMLReader.h"
 #import "OutputTextView.h"
-#import "JMMaskTextField.h"
 #import "ObjectClass.h"
 
 @interface ViewController : NSViewController <NSWindowDelegate, NSTextViewDelegate, NSTextFieldDelegate, NSURLSessionDelegate, NSURLAuthenticationChallengeSender>
@@ -20,6 +19,7 @@
 
 @property (nonatomic) NSMutableDictionary* list;
 @property (nonatomic) NSArray* arrayTasks;
+@property (nonatomic) NSMutableArray <Task*> *tasks;
 
 @property (nonatomic) NSMutableArray* arrayClosedTasks;
 @property (nonatomic) NSMutableArray* arrayClosedTasks_Test;
@@ -31,13 +31,19 @@
 - (IBAction)btnOpenFile:(id)sender;
 
 @property (weak,nonatomic) IBOutlet NSTextField * inputVersionTextField;
-//@property (weak) IBOutlet JMMaskTextField *testTextField;
 - (IBAction)btnGetXML:(id)sender;
-
+-(NSArray*)getArrayDicts:(NSDictionary*)dict;
+-(void)reloadView:(NSTextView*)textView;
 
 -(void)printfInf:(NSTextView*)textView;
 -(void)getInf:(Task*)task;
+
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*) identity :(SecTrustRef*) trust;
--(NSDictionary*)getXML:(NSString*)urlStr;
+//@property (nonatomic) NSData *dataP12;
+@property (nonatomic) NSString* password;
+//@property (nonatomic) NSDictionary *item;
+
+-(void)addCert;
+-(void)deleteCert;
 @end
 
