@@ -144,9 +144,25 @@
 
 -(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
-    // Read .p12 file
+    // Create dictionary of search parameters
+    NSString *service = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnData, kCFBooleanTrue, kSecReturnData, nil];
     
-    CFDataRef inP12data = (__bridge CFDataRef)@"";
+    // Look up server in the keychain
+    NSDictionary* found = nil;
+    CFDictionaryRef foundCF;
+    OSStatus err = SecItemCopyMatching((__bridge CFDictionaryRef) dict, (CFTypeRef*)&foundCF);
+    
+    found = (__bridge NSDictionary*)(foundCF);
+    
+    // Found
+    self.password = [[NSString alloc] initWithData:[found objectForKey:(__bridge id)(kSecValueData)] encoding:NSUTF8StringEncoding];
+    NSLog(@"dict %@", found);
+    
+    // Read .p12 file
+    NSString *path = @"/Users/a.zidenko/Desktop/ListOfClosedTasks/ListOfClosedTasks/cert_azh.p12";
+    NSData *dataP12 = [NSData dataWithContentsOfFile:path];
+    CFDataRef inP12data = (__bridge CFDataRef)dataP12;
     
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
@@ -390,7 +406,7 @@
             
             // Create dictionary of search parameters
             NSString *service = [[NSBundle mainBundle] bundleIdentifier];
-            NSDictionary* dict= [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, nil];
+            NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, nil];
             // Remove any old values from the keychain
             OSStatus err = SecItemDelete((__bridge CFDictionaryRef) dict);
             
@@ -399,26 +415,6 @@
             NSLog(@"dict - %@", dict);
             // Try to save to keychain
             err = SecItemAdd((__bridge CFDictionaryRef) dict, NULL);
-            
-            // Create dictionary of search parameters
-            NSDictionary* dict2 = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, kCFBooleanTrue, kSecReturnData, kCFBooleanTrue, kSecAttrPath, nil];
-//            NSDictionary* dict2 = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, kCFBooleanTrue, kSecReturnData, , kSecAttrPath, nil];
-            NSLog(@"dict2 - %@", dict2);
-            
-            // Look up server in the keychain
-            NSDictionary* found = nil;
-            CFDictionaryRef foundCF;
-            err = SecItemCopyMatching((__bridge CFDictionaryRef) dict2, (CFTypeRef*)&foundCF);
-            
-            //NSLog(@"%d",(int)err);
-            found = (__bridge NSDictionary*)(foundCF);
-            if (!found) return;
-            
-            // Found
-            NSString* password = [[NSString alloc] initWithData:[found objectForKey:(__bridge id)(kSecValueData)] encoding:NSUTF8StringEncoding];
-            NSString* path = [found objectForKey:(__bridge id)(kSecAttrPath)];
-            
-            NSLog(@"pass %@ and path %@", password, path);
         }
     }];
 }

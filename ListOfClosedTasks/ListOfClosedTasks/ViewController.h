@@ -41,7 +41,7 @@
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*) identity :(SecTrustRef*) trust;
 //@property (nonatomic) NSData *dataP12;
 @property (nonatomic) NSString* password;
-//@property (nonatomic) NSDictionary *item;
+//@property (nonatomic) NSDictionary *dict;
 
 -(void)addCert;
 -(void)deleteCert;
