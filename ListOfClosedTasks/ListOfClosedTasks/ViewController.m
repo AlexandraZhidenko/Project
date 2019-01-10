@@ -144,30 +144,22 @@
 
 -(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
-    // Create dictionary of search parameters
-    NSString *service = [[NSBundle mainBundle] bundleIdentifier];
-    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnData, kCFBooleanTrue, kSecReturnData, nil];
+    NSError* error = nil;
+    //self.password = [FDKeychain itemForKey:@"password" forService: @"Tmp" error: &error];
+    NSLog(@"password - %@", [FDKeychain itemForKey:@"password" forService: @"Password" error:&error]);
     
-    // Look up server in the keychain
-    NSDictionary* found = nil;
-    CFDictionaryRef foundCF;
-    OSStatus err = SecItemCopyMatching((__bridge CFDictionaryRef) dict, (CFTypeRef*)&foundCF);
     
-    found = (__bridge NSDictionary*)(foundCF);
+    NSData* cert;
+    //cert = [found objectForKey:(__bridge id)(kSecReturnRef)];
     
-    // Found
-    self.password = [[NSString alloc] initWithData:[found objectForKey:(__bridge id)(kSecValueData)] encoding:NSUTF8StringEncoding];
-    NSLog(@"dict %@", found);
+    //NSLog(@"pass - %@ cert - %@", self.password, cert);
     
-    // Read .p12 file
-    NSString *path = @"/Users/a.zidenko/Desktop/ListOfClosedTasks/ListOfClosedTasks/cert_azh.p12";
-    NSData *dataP12 = [NSData dataWithContentsOfFile:path];
-    CFDataRef inP12data = (__bridge CFDataRef)dataP12;
-    
+    CFDataRef inP12data = (__bridge CFDataRef)cert;
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
     
     [self extractIdentityAndTrust:inP12data :&myIdentity :&myTrust];
+    //[self extractIdentityAndTrust:(CFDataRef) :(SecIdentityRef *) :(SecTrustRef *)]
     
     SecCertificateRef myCertificate;
     SecIdentityCopyCertificate(myIdentity, &myCertificate);
@@ -182,8 +174,8 @@
 {
     // Import .p12 data
     
-    //CFStringRef password = CFSTR("qwerty");
-    CFStringRef password = (__bridge CFStringRef)(self.password);
+    CFStringRef password = CFSTR("qwerty");
+    //CFStringRef password = (__bridge CFStringRef)(self.password);
     const void *keys[] = { kSecImportExportPassphrase };
     const void *values[] = { password };
     CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL); // options = {passphrase = password;}
@@ -391,43 +383,38 @@
             if (button == NSAlertDefaultReturn)
             {
                 [input validateEditing];
-                self.password = [input stringValue];
+                self.password = input.stringValue;
             }
             else if (button == NSAlertAlternateReturn)
             {
                 self.password = @"";
             }
-            
+
             NSURL *selection = openPanel.URLs[0];
             NSString* filePath = [[NSString alloc] initWithString:[[selection path] stringByResolvingSymlinksInPath]];
-            //NSString* path = [filePath stringByDeletingLastPathComponent];
-            //NSLog(@"cert - %@", path);
-            //NSData* data = [NSData dataWithContentsOfFile:path];
+            NSData *dataP12 = [NSData dataWithContentsOfFile:filePath];
             
-            // Create dictionary of search parameters
-            NSString *service = [[NSBundle mainBundle] bundleIdentifier];
-            NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, nil];
-            // Remove any old values from the keychain
-            OSStatus err = SecItemDelete((__bridge CFDictionaryRef) dict);
+            //fdkeychain
+            NSError *error = nil;
+            NSData *stringData = [self.password dataUsingEncoding:NSUTF8StringEncoding];
+            OSStatus status = [FDKeychain saveItem:stringData forKey:@"password" forService:@"Password" error:&error];
             
-            // Create dictionary of parameters to add
-            dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword), kSecClass, service, kSecAttrService, self.password, kSecValueData, filePath, kSecAttrPath, nil];
-            NSLog(@"dict - %@", dict);
-            // Try to save to keychain
-            err = SecItemAdd((__bridge CFDictionaryRef) dict, NULL);
+            NSLog(@"password - %@", [FDKeychain itemForKey:@"password" forService: @"Password" error:&error]);
+            
+            
+            if (status == errSecSuccess){
+                NSLog(@"value saved");
+            }else{
+                NSLog(@"> error: %d", status);
+            }
         }
     }];
 }
 
 -(void)deleteCert
 {
-    // Create dictionary of search parameters
-    NSString *service = [[NSBundle mainBundle] bundleIdentifier];
-    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)(kSecClassInternetPassword),  kSecClass, service, kSecAttrService, kCFBooleanTrue, kSecReturnAttributes, kCFBooleanTrue, kSecReturnData, nil];
-    
-    // Remove any old values from the keychain
-    OSStatus err = SecItemDelete((__bridge CFDictionaryRef) dict);
-    //NSLog(@"%d",(int)err);
+    NSError *error = nil;
+    [FDKeychain deleteItemForKey: @"password" forService: @"Password" error: &error];
 }
 
 @end

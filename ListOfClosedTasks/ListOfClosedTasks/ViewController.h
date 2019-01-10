@@ -11,6 +11,7 @@
 #import "XMLReader.h"
 #import "OutputTextView.h"
 #import "ObjectClass.h"
+#import "FDKeychain.h"
 
 @interface ViewController : NSViewController <NSWindowDelegate, NSTextViewDelegate, NSTextFieldDelegate, NSURLSessionDelegate, NSURLAuthenticationChallengeSender>
 
@@ -40,7 +41,7 @@
 
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*) identity :(SecTrustRef*) trust;
 //@property (nonatomic) NSData *dataP12;
-@property (nonatomic) NSString* password;
+@property (nonatomic, retain) NSString* password;
 //@property (nonatomic) NSDictionary *dict;
 
 -(void)addCert;
