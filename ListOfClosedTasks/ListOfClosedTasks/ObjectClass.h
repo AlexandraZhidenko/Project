@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "XMLReader.h"
 
-
-
 @interface ObjectClass : NSObject <NSURLSessionDelegate>
 
 -(NSArray*)getArrayDicts:(NSDictionary*)dict;
@@ -35,4 +33,5 @@ typedef void (^callback)(void);
 
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*) identity :(SecTrustRef*) trust;
+@property (nonatomic, retain) NSString* password;
 @end

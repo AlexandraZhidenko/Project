@@ -95,20 +95,20 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="200"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="201"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView wantsLayer="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DYo-Sh-yLh">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="180"/>
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="181"/>
                                 <clipView key="contentView" id="nbi-m6-XdM">
-                                    <rect key="frame" x="1" y="1" width="478" height="178"/>
+                                    <rect key="frame" x="1" y="1" width="463" height="179"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="6NG-dm-R6S" customClass="OutputTextView">
-                                            <rect key="frame" x="0.0" y="-1" width="478" height="178"/>
+                                            <rect key="frame" x="0.0" y="-1" width="463" height="179"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="478" height="178"/>
+                                            <size key="minSize" width="463" height="179"/>
                                             <size key="maxSize" width="480" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         </textView>
@@ -119,13 +119,13 @@
                                     <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Rjc-Dv-Skl">
-                                    <rect key="frame" x="463" y="1" width="16" height="178"/>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Rjc-Dv-Skl">
+                                    <rect key="frame" x="464" y="1" width="15" height="179"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Zko-re-3mP">
-                                <rect key="frame" x="0.0" y="172" width="95" height="32"/>
+                                <rect key="frame" x="0.0" y="173" width="95" height="32"/>
                                 <buttonCell key="cell" type="push" title="Open file" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="acN-XY-Lg6">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -134,56 +134,43 @@
                                     <action selector="btnOpenFile:" target="XfG-lQ-9wD" id="N1M-35-BaC"/>
                                 </connections>
                             </button>
-                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B7R-bP-k51">
-                                <rect key="frame" x="125" y="179" width="96" height="21"/>
+                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fQH-ol-8Dl" customClass="PopUpButton">
+                                <rect key="frame" x="341" y="177" width="122" height="26"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="Kup-9Q-ED6"/>
-                                    <constraint firstAttribute="width" constant="96" id="Ovb-Bo-NzY"/>
+                                    <constraint firstAttribute="width" constant="117" id="xrD-vH-K8E"/>
                                 </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="DqC-5d-abg">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="maskString" value="0.0.0.0"/>
-                                </userDefinedRuntimeAttributes>
-                            </textField>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cuf-28-bq4">
-                                <rect key="frame" x="223" y="172" width="93" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="03J-x2-YGV"/>
-                                </constraints>
-                                <buttonCell key="cell" type="push" title="Get XML" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pEq-hv-v2b">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="btnGetXML:" target="XfG-lQ-9wD" id="o40-Tz-TId"/>
-                                </connections>
-                            </button>
+                                <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="QFd-X1-iEW" id="Vqb-hM-LwW">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="Ijj-pE-Kql">
+                                        <items>
+                                            <menuItem title="Item 1" state="on" id="QFd-X1-iEW"/>
+                                            <menuItem title="Item 2" id="8Bq-k5-Uwn"/>
+                                            <menuItem title="Item 3" id="sX3-vZ-pnE"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                            </popUpButton>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="B7R-bP-k51" firstAttribute="leading" secondItem="Zko-re-3mP" secondAttribute="trailing" constant="36" id="0Vx-vn-5ta"/>
-                            <constraint firstItem="cuf-28-bq4" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="446-Hi-Ujw"/>
                             <constraint firstAttribute="bottom" secondItem="DYo-Sh-yLh" secondAttribute="bottom" id="JRX-hS-TOs"/>
                             <constraint firstItem="DYo-Sh-yLh" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="KM7-Kj-ccg"/>
-                            <constraint firstItem="B7R-bP-k51" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="MfA-yN-I0w"/>
+                            <constraint firstItem="fQH-ol-8Dl" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="UOA-xn-bGV"/>
                             <constraint firstAttribute="trailing" secondItem="DYo-Sh-yLh" secondAttribute="trailing" id="VBp-2t-v7i"/>
                             <constraint firstItem="Zko-re-3mP" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="atj-3K-avB"/>
-                            <constraint firstItem="cuf-28-bq4" firstAttribute="leading" secondItem="B7R-bP-k51" secondAttribute="trailing" constant="8" id="fli-Vk-Dlm"/>
                             <constraint firstItem="Zko-re-3mP" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="6" id="jYL-xv-FWb"/>
+                            <constraint firstAttribute="trailing" secondItem="fQH-ol-8Dl" secondAttribute="trailing" constant="20" id="lni-gO-PkI"/>
                             <constraint firstItem="DYo-Sh-yLh" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="sef-jL-fnA"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="inputVersionTextField" destination="B7R-bP-k51" id="0dx-RZ-7mQ"/>
                         <outlet property="outputTextView" destination="6NG-dm-R6S" id="9Dx-DR-MUI"/>
+                        <outlet property="versions" destination="fQH-ol-8Dl" id="L1K-Hg-6bn"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="686"/>
+            <point key="canvasLocation" x="75" y="685.5"/>
         </scene>
     </scenes>
 </document>

@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A66C04A62204268700100621 /* versions.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A66C04A52204268700100621 /* versions.rtf */; };
 		A66E3E5121E5D6210030A0CF /* FDKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = A66E3E4F21E5D6200030A0CF /* FDKeychain.m */; };
+		A66E3E5321E73C350030A0CF /* AHKeychainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A66E3E5221E73C340030A0CF /* AHKeychainItem.m */; };
+		A66E3E5721E73C570030A0CF /* AHKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = A66E3E5621E73C570030A0CF /* AHKeychain.m */; };
+		A66E3E5921E8698C0030A0CF /* cert.p12 in Resources */ = {isa = PBXBuildFile; fileRef = A66E3E5821E8698C0030A0CF /* cert.p12 */; };
 		A683F628219AA7F3008EFF0D /* ObjectClass.m in Sources */ = {isa = PBXBuildFile; fileRef = A683F627219AA7F2008EFF0D /* ObjectClass.m */; };
 		A68AE98A213521D8008EC2D6 /* OutputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A68AE989213521D8008EC2D6 /* OutputTextView.m */; };
 		A692D7DD2101C4B700426925 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A692D7DC2101C4B600426925 /* AppDelegate.m */; };
@@ -20,8 +24,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A66C04A52204268700100621 /* versions.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = versions.rtf; sourceTree = "<group>"; };
 		A66E3E4F21E5D6200030A0CF /* FDKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDKeychain.m; sourceTree = "<group>"; };
 		A66E3E5021E5D6200030A0CF /* FDKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDKeychain.h; sourceTree = "<group>"; };
+		A66E3E5221E73C340030A0CF /* AHKeychainItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHKeychainItem.m; sourceTree = "<group>"; };
+		A66E3E5421E73C430030A0CF /* AHKeychainItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHKeychainItem.h; sourceTree = "<group>"; };
+		A66E3E5521E73C560030A0CF /* AHKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHKeychain.h; sourceTree = "<group>"; };
+		A66E3E5621E73C570030A0CF /* AHKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHKeychain.m; sourceTree = "<group>"; };
+		A66E3E5821E8698C0030A0CF /* cert.p12 */ = {isa = PBXFileReference; lastKnownFileType = text; path = cert.p12; sourceTree = "<group>"; };
 		A683F626219AA7F2008EFF0D /* ObjectClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectClass.h; sourceTree = "<group>"; };
 		A683F627219AA7F2008EFF0D /* ObjectClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectClass.m; sourceTree = "<group>"; };
 		A68AE988213521D8008EC2D6 /* OutputTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutputTextView.h; sourceTree = "<group>"; };
@@ -40,8 +50,6 @@
 		A692D7F02101C6EA00426925 /* XMLReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
 		A692D7F22101C8C300426925 /* NSData+Encryption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+Encryption.h"; sourceTree = "<group>"; };
 		A692D7F32101C8C300426925 /* NSData+Encryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encryption.m"; sourceTree = "<group>"; };
-		A692D7F82101DEBF00426925 /* SearchRequest.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SearchRequest.xml; sourceTree = "<group>"; };
-		A692D7F92108471700426925 /* SearchRequest3.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SearchRequest3.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,9 +96,13 @@
 				A692D7EF2101C6EA00426925 /* XMLReader.m */,
 				A66E3E5021E5D6200030A0CF /* FDKeychain.h */,
 				A66E3E4F21E5D6200030A0CF /* FDKeychain.m */,
+				A66E3E5421E73C430030A0CF /* AHKeychainItem.h */,
+				A66E3E5221E73C340030A0CF /* AHKeychainItem.m */,
+				A66E3E5521E73C560030A0CF /* AHKeychain.h */,
+				A66E3E5621E73C570030A0CF /* AHKeychain.m */,
 				A692D7E12101C4B700426925 /* Assets.xcassets */,
-				A692D7F82101DEBF00426925 /* SearchRequest.xml */,
-				A692D7F92108471700426925 /* SearchRequest3.xml */,
+				A66E3E5821E8698C0030A0CF /* cert.p12 */,
+				A66C04A52204268700100621 /* versions.rtf */,
 				A692D7E32101C4B700426925 /* Main.storyboard */,
 				A692D7E62101C4B700426925 /* Info.plist */,
 				A692D7E72101C4B700426925 /* main.m */,
@@ -157,8 +169,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A66E3E5921E8698C0030A0CF /* cert.p12 in Resources */,
 				A692D7E22101C4B700426925 /* Assets.xcassets in Resources */,
 				A692D7E52101C4B700426925 /* Main.storyboard in Resources */,
+				A66C04A62204268700100621 /* versions.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,8 +187,10 @@
 				A692D7E82101C4B700426925 /* main.m in Sources */,
 				A692D7F42101C8C300426925 /* NSData+Encryption.m in Sources */,
 				A683F628219AA7F3008EFF0D /* ObjectClass.m in Sources */,
+				A66E3E5721E73C570030A0CF /* AHKeychain.m in Sources */,
 				A692D7F12101C6EA00426925 /* XMLReader.m in Sources */,
 				A66E3E5121E5D6210030A0CF /* FDKeychain.m in Sources */,
+				A66E3E5321E73C350030A0CF /* AHKeychainItem.m in Sources */,
 				A68AE98A213521D8008EC2D6 /* OutputTextView.m in Sources */,
 				A692D7DD2101C4B700426925 /* AppDelegate.m in Sources */,
 			);

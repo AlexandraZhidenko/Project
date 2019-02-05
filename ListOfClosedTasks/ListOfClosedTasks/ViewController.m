@@ -10,6 +10,8 @@
 
 @implementation ViewController
 
+NSString* certPath;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -25,9 +27,68 @@
     
     NSMenuItem* addCert = [[NSMenuItem alloc] initWithTitle:@"Add" action:@selector(addCert) keyEquivalent:@""];
     [cert addItem:addCert];
-    
     NSMenuItem* deleteCert = [[NSMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteCert) keyEquivalent:@""];
     [cert addItem:deleteCert];
+    
+    self.keychain = [[AHKeychain alloc] init];
+    certPath = [[NSBundle mainBundle] pathForResource:@"cert" ofType:@"p12"];
+    
+    self.arrayWithVersions = [[NSMutableArray alloc] init];
+    NSString* filePath = [[NSBundle mainBundle] pathForResource:@"versions" ofType:@"rtf"];
+    self.arrayWithVersions = [[NSArray alloc] initWithContentsOfFile:filePath];
+    if(self.arrayWithVersions == NULL)
+    {
+        NSURL* url = [NSURL URLWithString:@"https://jira.compassplus.ru/rest/projects/1.0/project/TM/release/allversions?_=1548923969475"];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setURL:url];
+        [request setHTTPMethod:@"GET"];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:
+                                      ^(NSData *data, NSURLResponse *response, NSError *error)
+                                      {
+                                          //NSString * text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                                          //NSLog(@"text - %@", text);
+                                          if (data == nil)
+                                              NSLog(@"data == nil");
+                                          else
+                                          {
+                                              NSError *error = nil;
+                                              id object = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+                                              
+                                              if(error)
+                                                  NSLog(@"error - %@", error);
+                                              else
+                                              {
+                                                  //NSLog(@"object - %@", object);
+                                                  NSArray* array = object;
+                                                  self.arrayWithVersions = [[NSMutableArray alloc] init];
+                                                  
+                                                  for(int i = 0; i < array.count; i++)
+                                                  {
+                                                      NSDictionary* dict = [[NSDictionary alloc] initWithDictionary:[array objectAtIndex:i]];
+                                                      //NSLog(@"name - %@", [dict objectForKey:@"name"]);
+                                                      
+                                                      [self.arrayWithVersions addObject:[dict objectForKey:@"name"]];
+                                                  }
+                                                  //NSLog(@"arr - %@", self.versions);
+                                                  
+                                                  self.fileWithVersionsPath = [[NSBundle mainBundle] pathForResource:@"versions" ofType:@"rtf"];
+                                                  [[NSFileManager defaultManager] createFileAtPath:self.fileWithVersionsPath contents:nil attributes:nil];
+                                                  [self.arrayWithVersions writeToFile:self.fileWithVersionsPath atomically:YES];
+                                              }
+                                          }
+                                      }];
+        [task resume];
+    }
+    
+    NSMenu* menu = [[NSMenu alloc] init];
+    for(int i=0; i < self.arrayWithVersions.count; i++)
+    {
+        NSMenuItem* tmp = [[NSMenuItem alloc] initWithTitle:[self.arrayWithVersions objectAtIndex:i] action:@selector(btnGetXML) keyEquivalent:@""];
+        [menu addItem:tmp];
+    }
+    [self.versions setMenu:menu];
 }
 
 
@@ -77,12 +138,12 @@
     }];
 }
 
-- (IBAction)btnGetXML:(id)sender
+- (void)btnGetXML
 {
-    NSMutableString *tmp = [NSMutableString stringWithString:self.inputVersionTextField.stringValue];
-    [tmp insertString:@"." atIndex:1];
-    [tmp insertString:@"." atIndex:3];
-    [tmp insertString:@"." atIndex:5];
+    
+    NSMutableString *tmp = [self.versions itemTitleAtIndex:self.versions.indexOfSelectedItem];
+    tmp = [tmp stringByReplacingOccurrencesOfString:@"PB " withString:@""];
+    
     NSString *urlString = [NSString stringWithFormat:@"%@%@%@", @"https://jira.compassplus.ru/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=project+%3D+TM+AND+fixVersion+%3D+%22PB+", tmp, @"%22&tempMax=1000"];
     
     self.outputTextView.string = @"";
@@ -105,15 +166,19 @@
                                                             
                                                             self.arrayTasks = [self getArrayDicts:self.parsedXml];
                                                             self.tasks = [NSMutableArray arrayWithCapacity:0];
+                                                            
                                                             for(int i = 0; i < self.arrayTasks.count; i++)
                                                             {
                                                                 Task *task = [[Task alloc] initWithDictionary:self.arrayTasks[i]];
+                                                                task.password = self.password;
                                                                 
                                                                 task.block = ^{
                                                                     [self reloadView:self.outputTextView];
                                                                     
                                                                 };
+                                                                
                                                                 [self.tasks addObject:task];
+                                                                
                                                             }
                                                             [self reloadView:self.outputTextView];
                                                         }
@@ -145,21 +210,20 @@
 -(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
     NSError* error = nil;
-    //self.password = [FDKeychain itemForKey:@"password" forService: @"Tmp" error: &error];
-    NSLog(@"password - %@", [FDKeychain itemForKey:@"password" forService: @"Password" error:&error]);
+    AHKeychainItem *item = [[AHKeychainItem alloc] init];
+    item.service = @"service";
+    item.account = @"myusername";
+    [self.keychain getItem:item error:&error];
+    //NSLog(@"getItem - %d", [self.keychain getItem:item error:&error]);
+    self.password = item.password;
     
-    
-    NSData* cert;
-    //cert = [found objectForKey:(__bridge id)(kSecReturnRef)];
-    
-    //NSLog(@"pass - %@ cert - %@", self.password, cert);
-    
+    NSString* tmpFilePath = [[NSBundle mainBundle] pathForResource:@"cert" ofType:@"p12"];
+    NSData* cert = [[NSData alloc] initWithContentsOfFile:tmpFilePath];
     CFDataRef inP12data = (__bridge CFDataRef)cert;
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
     
     [self extractIdentityAndTrust:inP12data :&myIdentity :&myTrust];
-    //[self extractIdentityAndTrust:(CFDataRef) :(SecIdentityRef *) :(SecTrustRef *)]
     
     SecCertificateRef myCertificate;
     SecIdentityCopyCertificate(myIdentity, &myCertificate);
@@ -172,18 +236,18 @@
 
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*)identity :(SecTrustRef*)trust
 {
-    // Import .p12 data
     
-    CFStringRef password = CFSTR("qwerty");
-    //CFStringRef password = (__bridge CFStringRef)(self.password);
+    // Import .p12 data
+    CFStringRef password = (__bridge CFStringRef)(self.password);
     const void *keys[] = { kSecImportExportPassphrase };
     const void *values[] = { password };
     CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL); // options = {passphrase = password;}
     
     CFArrayRef keyref = NULL;
+    
     OSStatus sanityChesk = SecPKCS12Import(inP12data, options, &keyref);
     
-    if(sanityChesk == 0)
+    if(sanityChesk == errSecSuccess)
     {
         //NSLog(@"Success opening p12 certificate.");
         CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(keyref, 0);
@@ -193,7 +257,7 @@
         *trust = (SecTrustRef)tempTrust;
     }
     else
-        NSLog(@"Error %d", sanityChesk);
+        NSLog(@"err %d", sanityChesk);
     
     return sanityChesk;
 }
@@ -358,16 +422,18 @@
 
 -(void)addCert
 {
-    NSOpenPanel* openPanel = [NSOpenPanel openPanel];
-    openPanel.title = @"Choose a cert";
-    openPanel.showsResizeIndicator = YES;
-    openPanel.canCreateDirectories = YES;
-    openPanel.allowsMultipleSelection = NO;
+    [self deleteCert];
+    
+    self.openPanel = [NSOpenPanel openPanel];
+    self.openPanel.title = @"Choose a cert";
+    self.openPanel.showsResizeIndicator = YES;
+    self.openPanel.canCreateDirectories = YES;
+    self.openPanel.allowsMultipleSelection = NO;
     
     NSArray* type = [NSArray arrayWithObjects:@"p12",nil];
-    [openPanel setAllowedFileTypes:type];
+    [self.openPanel setAllowedFileTypes:type];
     
-    [openPanel beginSheetModalForWindow:openPanel.parentWindow completionHandler:^(NSInteger result){
+    [self.openPanel beginSheetModalForWindow:self.openPanel.parentWindow completionHandler:^(NSInteger result){
         if (result == NSModalResponseOK)
         {
             NSAlert *alert = [NSAlert alertWithMessageText: @"Input password"
@@ -377,7 +443,6 @@
                                  informativeTextWithFormat:@""];
             
             NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
-            //[input autorelease];
             [alert setAccessoryView:input];
             NSInteger button = [alert runModal];
             if (button == NSAlertDefaultReturn)
@@ -390,32 +455,40 @@
                 self.password = @"";
             }
 
-            NSURL *selection = openPanel.URLs[0];
+            NSURL *selection = self.openPanel.URLs[0];
             NSString* filePath = [[NSString alloc] initWithString:[[selection path] stringByResolvingSymlinksInPath]];
             NSData *dataP12 = [NSData dataWithContentsOfFile:filePath];
+            //NSLog(@"data - %@", dataP12);
             
-            //fdkeychain
-            NSError *error = nil;
-            NSData *stringData = [self.password dataUsingEncoding:NSUTF8StringEncoding];
-            OSStatus status = [FDKeychain saveItem:stringData forKey:@"password" forService:@"Password" error:&error];
+            //certPath = [[NSBundle mainBundle] pathForResource:@"cert" ofType:@"p12"];
+            [[NSFileManager defaultManager] createFileAtPath:certPath contents:nil attributes:nil];
+            [dataP12 writeToFile:certPath atomically:YES];
             
-            NSLog(@"password - %@", [FDKeychain itemForKey:@"password" forService: @"Password" error:&error]);
+            AHKeychainItem *item = [[AHKeychainItem alloc] init];
+            item.service = @"service";
+            item.account = @"myusername";
+            item.label = @"Keychain Item";
+            item.password = self.password;
             
-            
-            if (status == errSecSuccess){
-                NSLog(@"value saved");
-            }else{
-                NSLog(@"> error: %d", status);
-            }
+            self.keychain = [[AHKeychain alloc] initCreatingNewKeychain:certPath password:@"000"];
+            NSLog(@"save item - %d",[self.keychain saveItem:item error:nil]);
+            //[self.keychain saveItem:item error:nil];
         }
     }];
 }
 
 -(void)deleteCert
 {
-    NSError *error = nil;
-    [FDKeychain deleteItemForKey: @"password" forService: @"Password" error: &error];
+    AHKeychainItem *item = [[AHKeychainItem alloc] init];
+    item.service = @"service";
+    item.account = @"myusername";
+    item.label = @"Keychain Item";
+    item.password = self.password;
+    NSLog(@"err = %d", [self.keychain deleteItem:item error:nil]);
+    
+    self.password = nil;
+    NSLog(@"path - %@", certPath);
+    [[NSFileManager defaultManager] createFileAtPath:certPath contents:nil attributes:nil];
 }
-
 @end
 

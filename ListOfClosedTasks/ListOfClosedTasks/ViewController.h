@@ -11,9 +11,9 @@
 #import "XMLReader.h"
 #import "OutputTextView.h"
 #import "ObjectClass.h"
-#import "FDKeychain.h"
+#import "AHKeychain.h"
 
-@interface ViewController : NSViewController <NSWindowDelegate, NSTextViewDelegate, NSTextFieldDelegate, NSURLSessionDelegate, NSURLAuthenticationChallengeSender>
+@interface ViewController : NSViewController <NSWindowDelegate, NSTextViewDelegate, NSTextFieldDelegate, NSURLSessionDelegate, NSURLAuthenticationChallengeSender, NSPopoverDelegate>
 
 @property (nonatomic) NSDictionary* parsedXml;
 @property (nonatomic) NSOpenPanel* openPanel;
@@ -31,8 +31,11 @@
 @property (unsafe_unretained) IBOutlet NSTextView *outputTextView;
 - (IBAction)btnOpenFile:(id)sender;
 
-@property (weak,nonatomic) IBOutlet NSTextField * inputVersionTextField;
-- (IBAction)btnGetXML:(id)sender;
+@property (weak) IBOutlet NSPopUpButton *versions;
+@property (nonatomic) NSMutableArray *arrayWithVersions;
+@property (nonatomic) NSString* fileWithVersionsPath;
+
+- (void)btnGetXML;
 -(NSArray*)getArrayDicts:(NSDictionary*)dict;
 -(void)reloadView:(NSTextView*)textView;
 
@@ -40,11 +43,11 @@
 -(void)getInf:(Task*)task;
 
 -(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*) identity :(SecTrustRef*) trust;
-//@property (nonatomic) NSData *dataP12;
 @property (nonatomic, retain) NSString* password;
-//@property (nonatomic) NSDictionary *dict;
 
+@property (nonatomic) AHKeychain* keychain;
 -(void)addCert;
 -(void)deleteCert;
+
 @end
 

@@ -12,6 +12,7 @@
 
 -(NSString*)setSummary:(NSDictionary*)dictionary // this function defining summary task
 {
+    
     NSString* strSummary;
     // check if there is a comment for technical writer
     NSArray* arrWithCustomFields = [[NSArray alloc] init];
@@ -64,11 +65,16 @@
 -(NSString*)modificationSummary:(NSString*)str // this function return correct summary without <> br/ /p &lt &gt
 {
     // from string to array
-    NSMutableArray *arr = [[NSMutableArray alloc]init];
+    NSMutableArray *arr = [[NSMutableArray alloc] initWithCapacity:str.length];
     for (int i=0; i < str.length; i++)
     {
-        NSString *tmpStr = [str substringWithRange:NSMakeRange(i, 1)];
-        [arr addObject:[tmpStr stringByRemovingPercentEncoding]];
+        if([[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:@"%"])
+            [arr addObject:@"%"];
+        else
+        {
+            NSString *tmpStr = [str substringWithRange:NSMakeRange(i, 1)];
+            [arr addObject:[tmpStr stringByRemovingPercentEncoding]];
+        }
     }
     
     NSUInteger lenghtDescrpt = str.length;
@@ -143,6 +149,7 @@
     
     //set summary
     ObjectClass* object = [[ObjectClass alloc] init];
+    
     self.summary = [object setSummary:dictionary];
     
     //set client
@@ -202,7 +209,7 @@
     
 }
 
--(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
+/*-(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
     // Read .p12 file
     NSString *path = @"/Users/a.zidenko/Desktop/ListOfClosedTasks/ListOfClosedTasks/cert_azh.p12";
@@ -245,6 +252,52 @@
     }
     else
         NSLog(@"Error %d", sanityChesk);
+    
+    return sanityChesk;
+}*/
+
+-(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
+{
+    NSString* tmpFilePath = @"/Users/a.zidenko/Desktop/ListOfClosedTasks/ListOfClosedTasks/cert.p12";
+    NSData* cert = [[NSData alloc] initWithContentsOfFile:tmpFilePath];
+    CFDataRef inP12data = (__bridge CFDataRef)cert;
+    SecIdentityRef myIdentity;
+    SecTrustRef myTrust;
+    
+    [self extractIdentityAndTrust:inP12data :&myIdentity :&myTrust];
+    
+    SecCertificateRef myCertificate;
+    SecIdentityCopyCertificate(myIdentity, &myCertificate);
+    const void *certs[] = { myCertificate };
+    CFArrayRef certsArray = CFArrayCreate(NULL, certs, 1, NULL);
+    
+    NSURLCredential *credential = [NSURLCredential credentialWithIdentity:myIdentity certificates:(__bridge NSArray*)certsArray persistence:NSURLCredentialPersistencePermanent];
+    completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+}
+
+-(OSStatus*)extractIdentityAndTrust:(CFDataRef)inP12data :(SecIdentityRef*)identity :(SecTrustRef*)trust
+{
+    // Import .p12 data
+    CFStringRef password = (__bridge CFStringRef)(self.password);
+    const void *keys[] = { kSecImportExportPassphrase };
+    const void *values[] = { password };
+    CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL); // options = {passphrase = password;}
+    
+    CFArrayRef keyref = NULL;
+    
+    OSStatus sanityChesk = SecPKCS12Import(inP12data, options, &keyref);
+    
+    if(sanityChesk == errSecSuccess)
+    {
+        NSLog(@"Success opening p12 certificate.");
+        CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(keyref, 0);
+        const void *tempIdentity = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemIdentity);
+        *identity = (SecIdentityRef)tempIdentity;
+        const void *tempTrust = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemTrust);
+        *trust = (SecTrustRef)tempTrust;
+    }
+    else
+        NSLog(@"err %d", sanityChesk);
     
     return sanityChesk;
 }
